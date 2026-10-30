@@ -30,3 +30,5 @@ tests/reject/MismatchedRepoName.agda
 # legal Julia identifier and therefore cannot be a register entry. The detector
 # is load-bearing: the file must keep naming the spelling it guards against.
 .machine_readable/agent_instructions/methodology.a2ml
+# The clade declaration records the historical prefixed name as an alias.
+.machine_readable/CLADE.a2ml
