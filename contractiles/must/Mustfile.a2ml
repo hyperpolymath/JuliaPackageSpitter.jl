@@ -2,7 +2,7 @@
 # Mustfile (A2ML Canonical)
 
 @abstract:
-Physical State contract for JuliaPackage-Reuse-Audit.jl.
+Physical State contract for JuliaPackageSpitter.jl.
 Declares what must be true about this project's files and configuration.
 @end
 

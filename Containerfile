@@ -2,9 +2,9 @@
 # Copyright (c) {{CURRENT_YEAR}} {{AUTHOR}} (hyperpolymath) <{{AUTHOR_EMAIL}}>
 #
 # Containerfile for {{PROJECT_NAME}}
-# Build: podman build -t juliapackage-reuse-audit:latest -f Containerfile .
-# Run:   podman run --rm -it juliapackage-reuse-audit:latest
-# Seal:  selur seal juliapackage-reuse-audit:latest
+# Build: podman build -t juliapackagespitter:latest -f Containerfile .
+# Run:   podman run --rm -it juliapackagespitter:latest
+# Seal:  selur seal juliapackagespitter:latest
 
 # --- Build stage ---
 FROM cgr.dev/chainguard/wolfi-base:latest AS build
@@ -30,12 +30,12 @@ FROM cgr.dev/chainguard/static:latest
 # Copy built artifact from build stage
 # TODO: Replace with your binary/artifact path
 # Examples:
-#   COPY --from=build /build/target/release/juliapackage-reuse-audit /usr/local/bin/
-#   COPY --from=build /build/_build/prod/rel/juliapackage-reuse-audit /app/
-#   COPY --from=build /build/zig-out/bin/juliapackage-reuse-audit /usr/local/bin/
+#   COPY --from=build /build/target/release/juliapackagespitter /usr/local/bin/
+#   COPY --from=build /build/_build/prod/rel/juliapackagespitter /app/
+#   COPY --from=build /build/zig-out/bin/juliapackagespitter /usr/local/bin/
 
 # Non-root user (chainguard images default to nonroot)
 USER nonroot
 
 # TODO: Replace with your entrypoint
-# ENTRYPOINT ["/usr/local/bin/juliapackage-reuse-audit"]
+# ENTRYPOINT ["/usr/local/bin/juliapackagespitter"]

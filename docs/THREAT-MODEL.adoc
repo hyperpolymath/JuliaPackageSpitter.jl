@@ -1,11 +1,11 @@
-== Threat Model: JuliaPackage Reuse Audit.Jl
+== Threat Model: JuliaPackageSpitter.jl
 
 === Document Info
 
 [cols=",",options="header",]
 |===
 |Field |Value
-|Project |JuliaPackage Reuse Audit.Jl
+|Project |JuliaPackageSpitter.jl
 |Version |1.0
 |Last Reviewed |2026-03-16
 |Author |Jonathan D.A. Jewell
@@ -32,7 +32,7 @@
 
 === System Overview
 
-Brief description of JuliaPackage Reuse Audit.Jl and its architecture.
+Brief description of JuliaPackageSpitter.jl and its architecture.
 
 ____
 See link:../TOPOLOGY.md[TOPOLOGY.md] for the full architecture diagram

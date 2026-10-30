@@ -1,4 +1,4 @@
-= Juliapackage Reuse Audit.Jl — Developer Quickstart
+= JuliaPackageSpitter.jl — Developer Quickstart
 :toc: preamble
 
 Clone, build, test, contribute.
@@ -13,8 +13,8 @@ Clone, build, test, contribute.
 
 [source,bash]
 ----
-git clone https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl
-cd JuliaPackage-Reuse-Audit.jl
+git clone https://github.com/hyperpolymath/JuliaPackageSpitter.jl
+cd JuliaPackageSpitter.jl
 just doctor    # verify toolchain
 just heal      # auto-install missing tools
 ----

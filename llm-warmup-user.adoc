@@ -1,6 +1,6 @@
-== LLM Warmup — JuliaPackage-Reuse-Audit.jl (User)
+== LLM Warmup — JuliaPackageSpitter.jl (User)
 
-=== What is JuliaPackage-Reuse-Audit.jl?
+=== What is JuliaPackageSpitter.jl?
 
 See README.adoc for overview.
 

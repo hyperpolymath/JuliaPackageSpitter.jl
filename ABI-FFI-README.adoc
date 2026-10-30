@@ -1,4 +1,4 @@
-== JuliaPackage-Reuse-Audit.jl ABI/FFI Documentation
+== JuliaPackageSpitter.jl ABI/FFI Documentation
 
 === Overview
 
@@ -27,7 +27,7 @@ compatibility
                   ▼
 ┌─────────────────────────────────────────────┐
 │  C Headers (auto-generated)                 │
-│  generated/abi/juliapackage-reuse-audit.h                │
+│  generated/abi/juliapackagespitter.h                │
 └─────────────────┬───────────────────────────┘
                   │
                   │ imported by
@@ -40,7 +40,7 @@ compatibility
 │  - Memory-safe by default                   │
 └─────────────────┬───────────────────────────┘
                   │
-                  │ compiled to libjuliapackage-reuse-audit.so/.a
+                  │ compiled to libjuliapackagespitter.so/.a
                   ▼
 ┌─────────────────────────────────────────────┐
 │  Any Language via C ABI                     │
@@ -51,7 +51,7 @@ compatibility
 === Directory Structure
 
 ....
-juliapackage-reuse-audit/
+juliapackagespitter/
 ├── src/
 │   ├── abi/                    # ABI definitions (Idris2)
 │   │   ├── Types.idr           # Core type definitions with proofs
@@ -68,11 +68,11 @@ juliapackage-reuse-audit/
 │       ├── test/
 │       │   └── integration_test.zig
 │       └── include/
-│           └── juliapackage-reuse-audit.h   # C header (optional, can be generated)
+│           └── juliapackagespitter.h   # C header (optional, can be generated)
 │
 ├── generated/                  # Auto-generated files
 │   └── abi/
-│       └── juliapackage-reuse-audit.h       # Generated from Idris2 ABI
+│       └── juliapackagespitter.h       # Generated from Idris2 ABI
 │
 └── bindings/                   # Language-specific wrappers (optional)
     ├── rust/
@@ -211,7 +211,7 @@ zig build test                    # Run tests
 [source,bash]
 ----
 cd src/abi
-idris2 --cg c-header Types.idr -o ../../generated/abi/juliapackage-reuse-audit.h
+idris2 --cg c-header Types.idr -o ../../generated/abi/juliapackagespitter.h
 ----
 
 ==== Cross-Compile
@@ -236,19 +236,19 @@ zig build -Dtarget=x86_64-windows
 
 [source,c]
 ----
-#include "juliapackage-reuse-audit.h"
+#include "juliapackagespitter.h"
 
 int main() {
-    void* handle = juliapackage-reuse-audit_init();
+    void* handle = juliapackagespitter_init();
     if (!handle) return 1;
 
-    int result = juliapackage-reuse-audit_process(handle, 42);
+    int result = juliapackagespitter_process(handle, 42);
     if (result != 0) {
-        const char* err = juliapackage-reuse-audit_last_error();
+        const char* err = juliapackagespitter_last_error();
         fprintf(stderr, "Error: %s\n", err);
     }
 
-    juliapackage-reuse-audit_free(handle);
+    juliapackagespitter_free(handle);
     return 0;
 }
 ----
@@ -257,14 +257,14 @@ Compile with:
 
 [source,bash]
 ----
-gcc -o example example.c -ljuliapackage-reuse-audit -L./zig-out/lib
+gcc -o example example.c -ljuliapackagespitter -L./zig-out/lib
 ----
 
 ==== From Idris2
 
 [source,idris]
 ----
-import JuliaPackage-Reuse-Audit.jl.ABI.Foreign
+import JuliaPackageSpitter.ABI.Foreign
 
 main : IO ()
 main = do
@@ -282,22 +282,22 @@ main = do
 
 [source,rust]
 ----
-#[link(name = "juliapackage-reuse-audit")]
+#[link(name = "juliapackagespitter")]
 extern "C" {
-    fn juliapackage-reuse-audit_init() -> *mut std::ffi::c_void;
-    fn juliapackage-reuse-audit_free(handle: *mut std::ffi::c_void);
-    fn juliapackage-reuse-audit_process(handle: *mut std::ffi::c_void, input: u32) -> i32;
+    fn juliapackagespitter_init() -> *mut std::ffi::c_void;
+    fn juliapackagespitter_free(handle: *mut std::ffi::c_void);
+    fn juliapackagespitter_process(handle: *mut std::ffi::c_void, input: u32) -> i32;
 }
 
 fn main() {
     unsafe {
-        let handle = juliapackage-reuse-audit_init();
+        let handle = juliapackagespitter_init();
         assert!(!handle.is_null());
 
-        let result = juliapackage-reuse-audit_process(handle, 42);
+        let result = juliapackagespitter_process(handle, 42);
         assert_eq!(result, 0);
 
-        juliapackage-reuse-audit_free(handle);
+        juliapackagespitter_free(handle);
     }
 }
 ----
@@ -306,21 +306,21 @@ fn main() {
 
 [source,julia]
 ----
-const libjuliapackage-reuse-audit = "libjuliapackage-reuse-audit"
+const libjuliapackagespitter = "libjuliapackagespitter"
 
 function init()
-    handle = ccall((:juliapackage-reuse-audit_init, libjuliapackage-reuse-audit), Ptr{Cvoid}, ())
+    handle = ccall((:juliapackagespitter_init, libjuliapackagespitter), Ptr{Cvoid}, ())
     handle == C_NULL && error("Failed to initialize")
     handle
 end
 
 function process(handle, input)
-    result = ccall((:juliapackage-reuse-audit_process, libjuliapackage-reuse-audit), Cint, (Ptr{Cvoid}, UInt32), handle, input)
+    result = ccall((:juliapackagespitter_process, libjuliapackagespitter), Cint, (Ptr{Cvoid}, UInt32), handle, input)
     result
 end
 
 function cleanup(handle)
-    ccall((:juliapackage-reuse-audit_free, libjuliapackage-reuse-audit), Cvoid, (Ptr{Cvoid},), handle)
+    ccall((:juliapackagespitter_free, libjuliapackagespitter), Cvoid, (Ptr{Cvoid},), handle)
 end
 
 # Usage
@@ -379,7 +379,7 @@ When modifying the ABI/FFI:
 +
 [source,bash]
 ----
-idris2 --cg c-header src/abi/Types.idr -o generated/abi/juliapackage-reuse-audit.h
+idris2 --cg c-header src/abi/Types.idr -o generated/abi/juliapackagespitter.h
 ----
 . *Update FFI implementation* (`+ffi/zig/src/main.zig+`)
 * Implement new functions

@@ -89,4 +89,24 @@ retired-name3-not-legal-ident (legal-stop startWitness charsetWitness) =
   charset-excludes {c = '-'} hyphen-not-ident-char retiredName3Tail
     charsetWitness retired-name3-illegal-char
 
--- 3 retired name(s) refuted.
+-- Retired name 4: "JuliaPackage_Reuse_Audit.jl" (docs/naming/retired-names.txt)
+retiredName4 : List Char
+retiredName4 = 'J' ∷ 'u' ∷ 'l' ∷ 'i' ∷ 'a' ∷ 'P' ∷ 'a' ∷ 'c' ∷ 'k' ∷ 'a' ∷ 'g' ∷ 'e' ∷ '_' ∷ 'R' ∷ 'e' ∷ 'u' ∷ 's' ∷ 'e' ∷ '_' ∷ 'A' ∷ 'u' ∷ 'd' ∷ 'i' ∷ 't' ∷ '.' ∷ 'j' ∷ 'l' ∷ []
+
+-- The name without its first character.
+retiredName4Tail : List Char
+retiredName4Tail = 'u' ∷ 'l' ∷ 'i' ∷ 'a' ∷ 'P' ∷ 'a' ∷ 'c' ∷ 'k' ∷ 'a' ∷ 'g' ∷ 'e' ∷ '_' ∷ 'R' ∷ 'e' ∷ 'u' ∷ 's' ∷ 'e' ∷ '_' ∷ 'A' ∷ 'u' ∷ 'd' ∷ 'i' ∷ 't' ∷ '.' ∷ 'j' ∷ 'l' ∷ []
+
+-- The offending character, pointed at by position rather than searched for: it
+-- sits 24 characters into the name, so 23 into the tail.
+retired-name4-illegal-char : Any (IsChar '.') retiredName4Tail
+retired-name4-illegal-char = any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-there (any-here refl)))))))))))))))))))))))
+
+-- Therefore the tail is not a list of legal identifier characters, and the name
+-- is not a legal Julia identifier: no package could ever have carried it.
+retired-name4-not-legal-ident : ¬ (LegalIdent retiredName4)
+retired-name4-not-legal-ident (legal-stop startWitness charsetWitness) =
+  charset-excludes {c = '.'} dot-not-ident-char retiredName4Tail
+    charsetWitness retired-name4-illegal-char
+
+-- 4 retired name(s) refuted.

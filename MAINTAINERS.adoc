@@ -1,7 +1,6 @@
 == Maintainers
 
-This document lists the current and former maintainers of *JuliaPackage
-Reuse Audit.Jl*.
+This document lists the current and former maintainers of *JuliaPackageSpitter.jl*.
 
 '''''
 

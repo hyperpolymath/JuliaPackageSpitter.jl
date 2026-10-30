@@ -6,8 +6,8 @@
 uuid = "ae643ba8-1fab-5f76-9c7c-5a4909094ce8"
 primary-forge = "github"
 primary-owner = "hyperpolymath"
-canonical-name = "JuliaPackage-Reuse-Audit.jl"
-prefixed-name = "dx-JuliaPackage-Reuse-Audit.jl"
+canonical-name = "JuliaPackageSpitter.jl"
+prefixed-name = "dx-JuliaPackageSpitter.jl"
 
 [clade]
 primary = "dx"
@@ -16,9 +16,9 @@ assigned = "2026-03-16"
 rationale = ""
 
 [forges]
-github = "hyperpolymath/JuliaPackage-Reuse-Audit.jl"
-gitlab = "hyperpolymath/JuliaPackage-Reuse-Audit.jl"
-bitbucket = "hyperpolymath/JuliaPackage-Reuse-Audit.jl"
+github = "hyperpolymath/JuliaPackageSpitter.jl"
+gitlab = "hyperpolymath/JuliaPackageSpitter.jl"
+bitbucket = "hyperpolymath/JuliaPackageSpitter.jl"
 
 [lineage]
 type = "standalone"

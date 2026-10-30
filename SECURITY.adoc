@@ -27,7 +27,7 @@ GitHub’s Security Advisory feature:
 
 [arabic]
 . Navigate to
-https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/security/advisories/new[Report
+https://github.com/hyperpolymath/JuliaPackageSpitter.jl/security/advisories/new[Report
 a Vulnerability]
 . Click *"`Report a vulnerability`"*
 . Complete the form with as much detail as possible
@@ -223,7 +223,7 @@ from your initial report.
 
 The following are within scope for security research:
 
-* This repository (`+hyperpolymath/JuliaPackage-Reuse-Audit.jl+`) and
+* This repository (`+hyperpolymath/JuliaPackageSpitter.jl+`) and
 all its code
 * Official releases and packages published from this repository
 * Documentation that could lead to security issues
@@ -356,7 +356,7 @@ To stay informed about security updates:
 * *Watch this repository*: Click "`Watch`" → "`Custom`" → Select
 "`Security alerts`"
 * *GitHub Security Advisories*: Published at
-https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/security/advisories[Security
+https://github.com/hyperpolymath/JuliaPackageSpitter.jl/security/advisories[Security
 Advisories]
 * *Release notes*: Security fixes noted in link:CHANGELOG.md[CHANGELOG]
 
@@ -385,7 +385,7 @@ Advisories]
 
 === Security Best Practices
 
-When using JuliaPackage Reuse Audit.Jl, we recommend:
+When using JuliaPackageSpitter.jl, we recommend:
 
 ==== General
 
@@ -408,7 +408,7 @@ When using JuliaPackage Reuse Audit.Jl, we recommend:
 === Additional Resources
 
 * link:%7B%7BPGP_KEY_URL%7D%7D[Our PGP Public Key]
-* https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/security/advisories[Security
+* https://github.com/hyperpolymath/JuliaPackageSpitter.jl/security/advisories[Security
 Advisories]
 * link:CHANGELOG.md[Changelog]
 * link:.github/CONTRIBUTING.md[Contributing Guidelines]
@@ -423,11 +423,11 @@ Advisories]
 |===
 |Purpose |Contact
 |*Security issues*
-|https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/security/advisories/new[Report
+|https://github.com/hyperpolymath/JuliaPackageSpitter.jl/security/advisories/new[Report
 via GitHub] or 6759885+hyperpolymath@users.noreply.github.com
 
 |*General questions*
-|https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/discussions[GitHub
+|https://github.com/hyperpolymath/JuliaPackageSpitter.jl/discussions[GitHub
 Discussions]
 
 |*Other enquiries* |See link:README.md[README] for contact information
@@ -446,7 +446,7 @@ changes will be:
 
 '''''
 
-_Thank you for helping keep JuliaPackage Reuse Audit.Jl and its users
+_Thank you for helping keep JuliaPackageSpitter.jl and its users
 safe._ 🛡️
 
 '''''

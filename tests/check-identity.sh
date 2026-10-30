@@ -304,6 +304,75 @@ if want internal-urls; then
   fi
 fi
 
+# ── retired-name spellings ──────────────────────────────────────────────────
+#
+# A register entry names one identity, and the tree has carried that identity in
+# every spelling a person or a tool produced: hyphens, spaces, underscores, title
+# case, upper case, the ".jl" suffix dropped, the separators dropped, or a line
+# break in the middle of a sentence. So each entry becomes a pattern that matches
+# all of them:
+#   1. split the entry into words at camel humps and at separator runs [-_. ];
+#   2. lowercase the words and rejoin them with [-_. ]* (any run of separators,
+#      including none);
+#   3. a trailing "jl" word is an optional suffix, ([-_. ]*jl)?.
+# Matching is case-insensitive (the haystack is lowercased), and every line is
+# also tried joined to the line before it, so a name wrapped across a line break
+# is one occurrence. The rule needs every word of the entry, in order, so a
+# legitimate mention such as 'Automated "Reuse Audit"' or 'Julia package —
+# dependency reuse auditing' does not match.
+#
+# Written for mawk: no interval expressions anywhere, and no gawk extensions.
+spelling_pattern() { # register entry -> ERE on stdout
+  awk -v name="$1" '
+    function flush() { if (word != "") { words[++n] = tolower(word); word = "" } }
+    BEGIN {
+      n = 0; word = ""; prev = ""
+      len = length(name)
+      for (i = 1; i <= len; i++) {
+        c = substr(name, i, 1)
+        if (c ~ /[-_. ]/) { flush(); prev = c; continue }
+        if (c ~ /[A-Z]/ && word != "" &&
+            (prev ~ /[a-z0-9]/ || (prev ~ /[A-Z]/ && substr(name, i + 1, 1) ~ /[a-z]/)))
+          flush()
+        word = word c
+        prev = c
+      }
+      flush()
+      if (n == 0) exit 1
+      suffix = ""
+      # A trailing word boundary keeps "reuse auditing" (a concept) from matching
+      # "reuse audit" (the retired identity): the last word must end the match.
+      suffix = "([^a-z]|$)"
+      if (n > 1 && words[n] == "jl") { n--; suffix = "([-_. ]*jl)?" suffix }
+      out = ""
+      for (k = 1; k <= n; k++) {
+        w = words[k]
+        esc = ""
+        for (j = 1; j <= length(w); j++) {
+          ch = substr(w, j, 1)
+          esc = (ch ~ /[a-z0-9]/) ? esc ch : esc "\\" ch
+        }
+        out = (k == 1) ? esc : out "[-_. ]*" esc
+      }
+      printf "%s%s\n", out, suffix
+    }'
+}
+
+# retired_scan PATTERN FILE -> path:line:text for each line (or wrapped pair) that matches
+retired_scan() {
+  RETIRED_PAT="$1" awk '
+    BEGIN { pat = ENVIRON["RETIRED_PAT"]; prev = "" }
+    {
+      cur = tolower($0)
+      if (cur ~ pat) {
+        printf "%s:%d:%s\n", FILENAME, FNR, $0
+      } else if (prev !~ pat && (prev " " cur) ~ pat) {
+        printf "%s:%d:[wrapped across line break] %s\n", FILENAME, FNR, $0
+      }
+      prev = cur
+    }' "$2"
+}
+
 if want retired-names; then
   register="${root}/docs/naming/retired-names.txt"
   if [ ! -f "$register" ]; then
@@ -313,32 +382,46 @@ if want retired-names; then
     if [ -z "$names" ]; then
       note_fail "retired-names: ${register} declares no retired names"
     else
-      patterns="$(mktemp)"
-      printf '%s\n' "$names" >"$patterns"
-      hits="$(scan_grep -n -F -f "$patterns" || true)"
-      rm -f "$patterns"
-      if [ -z "$hits" ]; then
-        note_pass "retired-names: no occurrence of $(printf '%s' "$names" | wc -l | tr -d ' ') retired name(s) anywhere in the tree"
+      # One spelling-insensitive pattern per register entry, joined by '|'.
+      pattern=""
+      bad_entry=""
+      while IFS= read -r name; do
+        one="$(spelling_pattern "$name")" || { bad_entry="$name"; break; }
+        if [ -z "$one" ]; then bad_entry="$name"; break; fi
+        pattern="${pattern:+${pattern}|}${one}"
+      done <<<"$names"
+      if [ -n "$bad_entry" ]; then
+        note_fail "retired-names: cannot derive a spelling pattern for register entry '${bad_entry}'"
       else
-        bad=0
-        shown=0
-        # One line matched by two retired forms is one finding, so deduplicate on
-        # path:line before counting.
-        deduped="$(printf '%s\n' "$hits" | awk -F: '{ key = $1 ":" $2 } !seen[key]++ { print }')"
-        while IFS= read -r hit; do
-          [ -n "$hit" ] || continue
-          path="$(relativize "${hit%%:*}")"
-          if is_allowlisted "$path"; then continue; fi
-          bad=$((bad + 1))
-          if [ "$shown" -lt 25 ]; then
-            printf '  %s\n' "$(printf '%s' "$hit" | sed "s|^${root}/||; s|^\./||" | cut -c1-160)"
-            shown=$((shown + 1))
-          fi
-        done <<<"$deduped"
-        if [ "$bad" -eq 0 ]; then
-          note_pass "retired-names: every occurrence of a retired name sits in the recorded historical allowlist"
+        hits=""
+        while IFS= read -r f; do
+          grep -Iq . "$f" 2>/dev/null || continue
+          hits+="$(retired_scan "$pattern" "$f")"$'\n'
+        done < <(find "$root" \( -name .git -o -name generated \) -prune -o -type f -print)
+        hits="$(printf '%s' "$hits" | grep -v '^$' || true)"
+        if [ -z "$hits" ]; then
+          note_pass "retired-names: no spelling of $(printf '%s' "$names" | wc -l | tr -d ' ') retired name(s) anywhere in the tree (pattern: ${pattern})"
         else
-          note_fail "retired-names: ${bad} occurrence(s) of a retired name outside the allowlist (showing at most 25 above). A retired name that survives in the tree is how the next person gets confused."
+          bad=0
+          shown=0
+          # One line matched by two retired forms is one finding, so deduplicate on
+          # path:line before counting.
+          deduped="$(printf '%s\n' "$hits" | awk -F: '{ key = $1 ":" $2 } !seen[key]++ { print }')"
+          while IFS= read -r hit; do
+            [ -n "$hit" ] || continue
+            path="$(relativize "${hit%%:*}")"
+            if is_allowlisted "$path"; then continue; fi
+            bad=$((bad + 1))
+            if [ "$shown" -lt 25 ]; then
+              printf '  %s\n' "$(printf '%s' "$hit" | sed "s|^${root}/||; s|^\./||" | cut -c1-160)"
+              shown=$((shown + 1))
+            fi
+          done <<<"$deduped"
+          if [ "$bad" -eq 0 ]; then
+            note_pass "retired-names: every spelling of a retired name sits in the recorded historical allowlist"
+          else
+            note_fail "retired-names: ${bad} occurrence(s) of a retired name in any spelling outside the allowlist (showing at most 25 above). A retired name that survives in the tree is how the next person gets confused."
+          fi
         fi
       fi
     fi
