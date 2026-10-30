@@ -30,6 +30,16 @@ workflows:
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'hyperpolymath/deed-ecosystem@aa4b836bd969df2bc58128cb8e3d20bbc88d5e79'
         - 'hyperpolymath/k9-ecosystem@89f3c2702f4f650a92aa7411502f38da06abd562'
+    # HAND-MAINTAINED. `gh actions-lock` does not lock cross-repo reusable
+    # workflows (github/gh-actions-lock#179), so without this entry every
+    # governance job dies at action resolution with "invalid lockfile pin".
+    # Pins are the transitive `uses:` of governance-reusable.yml at the SHA
+    # governance.yml pins (8f2ee50841e216cd8c192eeb68953118190f105c).
+    '.github/workflows/governance.yml':
+        - 'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9'
+        - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
+        - 'editorconfig-checker/action-editorconfig-checker@51f63319f592f97930c73d9c46184d20bd206393'
+        - 'erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124'
     '.github/workflows/hypatia-scan.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
@@ -41,12 +51,24 @@ workflows:
     '.github/workflows/julia-setup-test.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687'
+    # HAND-MAINTAINED, same reason as governance.yml. Transitive `uses:` of
+    # mirror-reusable.yml at 8f2ee50841e216cd8c192eeb68953118190f105c.
+    '.github/workflows/mirror.yml':
+        - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
+        - 'dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772'
+        - 'webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555'
     '.github/workflows/push-email-notify.yml':
         - 'hyperpolymath/smtp-notify-action@c1c9fa07992a02c1fd3d67a0dc1b08cccb852aef'
     '.github/workflows/release.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9'
         - 'softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64'
+    # HAND-MAINTAINED, same reason as governance.yml. Transitive `uses:` of
+    # scorecard-reusable.yml at 8f2ee50841e216cd8c192eeb68953118190f105c.
+    '.github/workflows/scorecard.yml':
+        - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
+        - 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a'
+        - 'ossf/scorecard-action@2d1146689b8cda280b9bc96326124645441f03bc'
     '.github/workflows/secret-scanner.yml':
         - 'actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd'
         - 'gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7'
