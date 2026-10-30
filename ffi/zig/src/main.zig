@@ -9,7 +9,7 @@
 // and juliapackagespitter_register_callback validate their arguments and then
 // do nothing else. They are examples, not behaviour.
 //
-// No Idris2 ABI exists in this repository (src/abi/ is absent), so nothing here
+// No Idris2 ABI exists in this repository (the Idris2 sources are not in the tree), so nothing here
 // is checked against one. The C declarations are in include/juliapackagespitter.h.
 
 const std = @import("std");
