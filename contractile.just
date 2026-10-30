@@ -77,7 +77,11 @@ trust-no-secrets-committed:
     test ! -f .env && test ! -f credentials.json && test ! -f .env.local
 
 # Containerfile base images use pinned digests
+# NOTE: kept byte-identical to the `command:` value in
+# contractiles/trust/Trustfile.a2ml — see the same note on must-spdx-headers.
+# Was `grep -q '@sha256:' Containerfile`, which passed when any single line
+# contained a digest, leaving an unpinned runtime stage undetected.
 trust-container-images-pinned:
-    test ! -f Containerfile || grep -q '@sha256:' Containerfile
+    test ! -f Containerfile || awk '/^[[:space:]]*FROM[[:space:]]/ && !/@sha256:/ { print "unpinned base image: " $0; bad = 1 } END { exit bad + 0 }' Containerfile
 
 
