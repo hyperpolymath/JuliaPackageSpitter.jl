@@ -1,10 +1,16 @@
 // SPDX-License-Identifier: MPL-2.0
-// JuliaPackageSpitter.jl FFI Implementation
+// JuliaPackageSpitter.jl FFI implementation (template).
 //
-// This module implements the C-compatible FFI declared in src/abi/Foreign.idr
-// All types and layouts must match the Idris2 ABI definitions.
+// Working: library lifecycle (init/free/is_initialized), version and build
+// info, the string round-trip (get_string/free_string), and last-error
+// reporting.
 //
-// SPDX-License-Identifier: MPL-2.0
+// Placeholders: juliapackagespitter_process, juliapackagespitter_process_array
+// and juliapackagespitter_register_callback validate their arguments and then
+// do nothing else. They are examples, not behaviour.
+//
+// No Idris2 ABI exists in this repository (src/abi/ is absent), so nothing here
+// is checked against one. The C declarations are in include/juliapackagespitter.h.
 
 const std = @import("std");
 
@@ -12,11 +18,12 @@ const std = @import("std");
 const VERSION = "0.1.0";
 const BUILD_INFO = "JuliaPackageSpitter.jl built with Zig " ++ @import("builtin").zig_version_string;
 
-/// Thread-local error storage
-threadlocal var last_error: ?[]const u8 = null;
+/// Thread-local error storage. Only string literals are stored, so the pointer
+/// stays valid for the life of the program and needs no freeing.
+threadlocal var last_error: ?[*:0]const u8 = null;
 
-/// Set the last error message
-fn setError(msg: []const u8) void {
+/// Set the last error message (must be a string literal or other static string)
+fn setError(msg: [*:0]const u8) void {
     last_error = msg;
 }
 
@@ -26,10 +33,10 @@ fn clearError() void {
 }
 
 //==============================================================================
-// Core Types (must match src/abi/Types.idr)
+// Core Types
 //==============================================================================
 
-/// Result codes (must match Idris2 Result type)
+/// Result codes
 pub const Result = enum(c_int) {
     ok = 0,
     @"error" = 1,
@@ -38,13 +45,12 @@ pub const Result = enum(c_int) {
     null_pointer = 4,
 };
 
-/// Library handle (opaque to prevent direct access)
-pub const Handle = opaque {
-    // Internal state hidden from C
+/// Library handle. Its layout is private to this file; C sees only an opaque pointer.
+pub const Handle = struct {
     allocator: std.mem.Allocator,
     initialized: bool,
-    // Add your fields here
 };
+
 
 //==============================================================================
 // Library Lifecycle
@@ -137,7 +143,9 @@ export fn juliapackagespitter_free_string(str: ?[*:0]const u8) void {
     const s = str orelse return;
     const allocator = std.heap.c_allocator;
 
-    const slice = std.mem.span(s);
+    // get_string allocated len+1 bytes (dupeZ includes the sentinel). The free
+    // must pass that exact length, or the allocator is handed the wrong size.
+    const slice = @constCast(s[0 .. std.mem.len(s) + 1]);
     allocator.free(slice);
 }
 
@@ -183,12 +191,8 @@ export fn juliapackagespitter_process_array(
 /// Get the last error message
 /// Returns null if no error
 export fn juliapackagespitter_last_error() ?[*:0]const u8 {
-    const err = last_error orelse return null;
-
-    // Return C string (static storage, no need to free)
-    const allocator = std.heap.c_allocator;
-    const c_str = allocator.dupeZ(u8, err) catch return null;
-    return c_str.ptr;
+    // Static storage: the message is a string literal, so the caller must NOT free it.
+    return last_error;
 }
 
 //==============================================================================

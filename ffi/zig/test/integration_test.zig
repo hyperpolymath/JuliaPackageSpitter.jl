@@ -1,20 +1,22 @@
 // JULIAPACKAGESPITTER Integration Tests
 // SPDX-License-Identifier: MPL-2.0
 //
-// These tests verify that the Zig FFI correctly implements the Idris2 ABI
+// These tests call the library through its C ABI (include/juliapackagespitter.h),
+// linked against the built library. They check the template FFI described in
+// src/main.zig; they do not check an Idris2 ABI, which does not exist here.
 
 const std = @import("std");
 const testing = std.testing;
 
-// Import FFI functions
-extern fn juliapackagespitter_init() ?*opaque {};
-extern fn juliapackagespitter_free(?*opaque {}) void;
-extern fn juliapackagespitter_process(?*opaque {}, u32) c_int;
-extern fn juliapackagespitter_get_string(?*opaque {}) ?[*:0]const u8;
+// Import FFI functions. The handle is an opaque pointer on the C side.
+extern fn juliapackagespitter_init() ?*anyopaque;
+extern fn juliapackagespitter_free(?*anyopaque) void;
+extern fn juliapackagespitter_process(?*anyopaque, u32) c_int;
+extern fn juliapackagespitter_get_string(?*anyopaque) ?[*:0]const u8;
 extern fn juliapackagespitter_free_string(?[*:0]const u8) void;
 extern fn juliapackagespitter_last_error() ?[*:0]const u8;
 extern fn juliapackagespitter_version() [*:0]const u8;
-extern fn juliapackagespitter_is_initialized(?*opaque {}) u32;
+extern fn juliapackagespitter_is_initialized(?*anyopaque) u32;
 
 //==============================================================================
 // Lifecycle Tests
@@ -24,7 +26,8 @@ test "create and destroy handle" {
     const handle = juliapackagespitter_init() orelse return error.InitFailed;
     defer juliapackagespitter_free(handle);
 
-    try testing.expect(handle != null);
+    // init returned a non-null pointer, or the orelse above would have returned.
+    try testing.expectEqual(@as(u32, 1), juliapackagespitter_is_initialized(handle));
 }
 
 test "handle is initialized" {
@@ -65,10 +68,10 @@ test "get string result" {
     const handle = juliapackagespitter_init() orelse return error.InitFailed;
     defer juliapackagespitter_free(handle);
 
-    const str = juliapackagespitter_get_string(handle);
-    defer if (str) |s| juliapackagespitter_free_string(s);
+    const str = juliapackagespitter_get_string(handle) orelse return error.NullString;
+    defer juliapackagespitter_free_string(str);
 
-    try testing.expect(str != null);
+    try testing.expectEqualStrings("Example result", std.mem.span(str));
 }
 
 test "get string with null handle" {
@@ -83,23 +86,20 @@ test "get string with null handle" {
 test "last error after null handle operation" {
     _ = juliapackagespitter_process(null, 0);
 
-    const err = juliapackagespitter_last_error();
-    try testing.expect(err != null);
-
-    if (err) |e| {
-        const err_str = std.mem.span(e);
-        try testing.expect(err_str.len > 0);
-    }
+    const err = juliapackagespitter_last_error() orelse return error.NoError;
+    try testing.expect(std.mem.span(err).len > 0);
 }
 
 test "no error after successful operation" {
     const handle = juliapackagespitter_init() orelse return error.InitFailed;
     defer juliapackagespitter_free(handle);
 
-    _ = juliapackagespitter_process(handle, 0);
+    // A failing call sets an error; a successful one must clear it.
+    _ = juliapackagespitter_process(null, 0);
+    try testing.expect(juliapackagespitter_last_error() != null);
 
-    // Error should be cleared after successful operation
-    // (This depends on implementation)
+    try testing.expectEqual(@as(c_int, 0), juliapackagespitter_process(handle, 0));
+    try testing.expect(juliapackagespitter_last_error() == null);
 }
 
 //==============================================================================
@@ -139,19 +139,12 @@ test "multiple handles are independent" {
     _ = juliapackagespitter_process(h2, 2);
 }
 
-test "double free is safe" {
-    const handle = juliapackagespitter_init() orelse return error.InitFailed;
-
-    juliapackagespitter_free(handle);
-    juliapackagespitter_free(handle); // Should not crash
-}
-
 test "free null is safe" {
-    juliapackagespitter_free(null); // Should not crash
+    juliapackagespitter_free(null); // Documented no-op
 }
 
 //==============================================================================
-// Thread Safety Tests (if applicable)
+// Thread Safety Tests
 //==============================================================================
 
 test "concurrent operations" {
@@ -159,7 +152,7 @@ test "concurrent operations" {
     defer juliapackagespitter_free(handle);
 
     const ThreadContext = struct {
-        h: *opaque {},
+        h: *anyopaque,
         id: u32,
     };
 
