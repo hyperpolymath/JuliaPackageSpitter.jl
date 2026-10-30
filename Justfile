@@ -578,7 +578,7 @@ guix-build:
     guix build -f guix.scm
 
 # Enter Guix development shell (fallback)
-guix-shell:
+guix-shell-fallback:
     @if [ -f "flake.guix" ]; then guix develop; else echo "No flake.guix"; fi
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -708,7 +708,7 @@ doctor:
     check "git"               git       "2.40" 
     check "Zig"               zig       "0.13" 
     check "Julia"             julia     "1.10" 
-# Optional tools
+    # Optional tools
     if command -v panic-attack >/dev/null 2>&1; then
     echo "  [OK]   panic-attack — available"
     PASS=$((PASS + 1))
