@@ -23,8 +23,26 @@ Declares what must be true about this project's files and configuration.
 - severity: critical
 
 ### spdx-headers
+# Retargeted at the languages this repository actually contains.
+#
+# The previous predicate searched for '*.rs', '*.res' and '*.gleam'. A census of
+# this checkout finds ZERO files with those extensions, so `xargs -r` never ran,
+# `wc -l` returned 0, and the check reported success without examining a single
+# file. A gate that cannot fail is worse than no gate: it was reported green in
+# every CI run since it was added while asserting nothing.
+#
+# The replacement covers every source extension present here — .jl (6 files),
+# .agda (17), .sh (10), .ncl (7), 40 in total, all of which already carry an
+# SPDX-License-Identifier — so this is a real check that passes today rather than
+# a new source of red.
+#
+# The leading `test … -gt 0` guard is deliberate and is the part that makes this
+# fail-closed: without it, deleting every source file would make the predicate
+# vacuously true again, reintroducing exactly the failure mode being fixed here.
+# The `head -20` truncation in the old command is also gone; it silently limited
+# the audit to the first twenty files find happened to emit.
 - description: Source files should have SPDX license headers
-- run: find . -name '*.rs' -o -name '*.res' -o -name '*.gleam' | head -20 | xargs -r grep -L 'SPDX-License-Identifier' | wc -l | grep -q '^0$'
+- run: test "$(find . -path ./.git -prune -o \( -name '*.jl' -o -name '*.agda' -o -name '*.sh' -o -name '*.ncl' \) -print | wc -l)" -gt 0 && find . -path ./.git -prune -o \( -name '*.jl' -o -name '*.agda' -o -name '*.sh' -o -name '*.ncl' \) -print | xargs -r grep -L 'SPDX-License-Identifier' | wc -l | grep -q '^0$'
 - severity: warning
 
 ### no-banned-files
