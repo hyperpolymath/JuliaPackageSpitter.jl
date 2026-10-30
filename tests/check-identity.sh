@@ -358,18 +358,49 @@ spelling_pattern() { # register entry -> ERE on stdout
     }'
 }
 
-# retired_scan PATTERN FILE -> path:line:text for each line (or wrapped pair) that matches
+# retired_scan PATTERN FILE -> path:line:text for each line that matches, and for
+# each line where a match starts and runs across a line break.
+#
+# A name can be wrapped anywhere: between words ("JuliaPackage" / "Reuse-Audit"),
+# inside a word ("JuliaPacka" / "ge-Reuse-Audit.jl"), or across three or more
+# lines. So the file is scanned as one string twice: lines joined with a space
+# (catches a break at a word boundary) and lines joined with nothing (catches a
+# break inside a word). Any match that spans a join is reported at the line
+# where it starts. Matches inside a single line are reported by the per-line
+# pass. The caller de-duplicates on path:line.
 retired_scan() {
   RETIRED_PAT="$1" awk '
-    BEGIN { pat = ENVIRON["RETIRED_PAT"]; prev = "" }
-    {
-      cur = tolower($0)
-      if (cur ~ pat) {
-        printf "%s:%d:%s\n", FILENAME, FNR, $0
-      } else if (prev !~ pat && (prev " " cur) ~ pat) {
-        printf "%s:%d:[wrapped across line break] %s\n", FILENAME, FNR, $0
+    BEGIN { pat = ENVIRON["RETIRED_PAT"] }
+    function lineof(pos,   i) {
+      for (i = n; i > 1 && start[i] > pos; i--) { }
+      return i
+    }
+    { n = NR; raw[n] = $0; low[n] = tolower($0) }
+    END {
+      for (i = 1; i <= n; i++) {
+        if (low[i] ~ pat) printf "%s:%d:%s\n", FILENAME, i, raw[i]
       }
-      prev = cur
+      for (k = 1; k <= 2; k++) {
+        sep = (k == 1) ? " " : ""
+        J = ""
+        for (i = 1; i <= n; i++) {
+          start[i] = length(J) + 1
+          J = J low[i] ((i < n) ? sep : "")
+        }
+        base = 0
+        s = J
+        while (length(s) > 0 && match(s, pat)) {
+          p = base + RSTART
+          e = p + RLENGTH - 1
+          if (RLENGTH <= 0) break
+          if (lineof(e) > lineof(p)) crossed[lineof(p)] = 1
+          base = p
+          s = substr(J, p + 1)
+        }
+      }
+      for (i = 1; i <= n; i++) {
+        if (i in crossed) printf "%s:%d:[wrapped across line break] %s\n", FILENAME, i, raw[i]
+      }
     }' "$2"
 }
 

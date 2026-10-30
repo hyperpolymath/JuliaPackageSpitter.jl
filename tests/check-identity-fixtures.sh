@@ -52,6 +52,8 @@ cases=(
   "spelling-no-suffix|retired-names|1|build_spelling_no_suffix"
   "spelling-no-separators|retired-names|1|build_spelling_no_separators"
   "spelling-wrapped-line|retired-names|1|build_spelling_wrapped_line"
+  "spelling-split-inside-word|retired-names|1|build_spelling_split_inside_word"
+  "spelling-three-line-wrap|retired-names|1|build_spelling_three_line_wrap"
   # A deliberately consistent tree that uses the words of the retired name in
   # legitimate senses. Must be ACCEPTED, or the rule is too broad.
   "legitimate-concept-mentions|retired-names|0|build_legitimate_mentions"
@@ -206,6 +208,10 @@ build_spelling_upper_case()       { build_spelling "$1" 'Formerly OLD_THING.JL, 
 build_spelling_no_suffix()        { build_spelling "$1" 'Formerly OldThing, now retired.'; }
 build_spelling_no_separators()    { build_spelling "$1" 'Formerly oldthingjl, now retired.'; }
 build_spelling_wrapped_line()     { build_spelling "$1" 'Formerly Old\nThing.jl, now retired.'; }
+build_spelling_split_inside_word() { build_spelling "$1" 'Formerly Ol\ndThing.jl, now retired.'; }
+# Three lines, and no adjacent pair matches the name on its own: only the scan
+# that joins lines with nothing can see it.
+build_spelling_three_line_wrap() { build_spelling "$1" 'Formerly Old\nThi\nng.jl, now retired.'; }
 
 # The consistent tree, but with the REAL register (every entry the repository
 # retired) and sentences that use the words of the retired name in legitimate
