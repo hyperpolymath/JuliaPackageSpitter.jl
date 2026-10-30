@@ -76,10 +76,10 @@ between them is discharged by `refl`, so Agda's own evaluator decides it.
   APIs that do not exist in Zig 0.13, 0.14 or 0.17 (tested locally). This is a
   baseline defect, not a regression from the rename. Nothing in `ffi/zig/` is
   verified.
-* The Idris2 ABI. `src/abi/` does not exist in the tree, so there is nothing to
-  verify. `ABI-FFI-README.adoc` describes it and is out of date.
+* The Idris2 ABI. The Idris2 sources are not in the tree, so there is nothing to
+  verify. `ABI-FFI-README.adoc` describes it as planned.
 * The `ci_profile` option. It is stored on the spec and does not change generated
-  output. The `ffi_enabled` option only creates empty `ffi/zig` and `src/abi`
+  output. The `ffi_enabled` option only creates empty `ffi/zig` and ABI
   directories; it writes no Zig or Idris2 files.
 * Reuse auditing. It is planned for v0.3.0 and not implemented.
 

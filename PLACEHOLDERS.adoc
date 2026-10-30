@@ -23,10 +23,9 @@ validates the result, and runs k9-svc checks if available.
 sed -i 's/Jonathan D.A. Jewell/Jane Doe/g' $(grep -rl 'Jonathan D.A. Jewell' .)
 sed -i 's/j.d.a.jewell@open.ac.uk/jane@example.org/g' $(grep -rl 'j.d.a.jewell@open.ac.uk' .)
 sed -i 's/hyperpolymath/my-org/g' $(grep -rl 'hyperpolymath' .)
-sed -i 's/JuliaPackageSpitter.jl/my-project/g' $(grep -rl 'JuliaPackageSpitter.jl' .)
-sed -i 's/JuliaPackageSpitter.jl/MY_PROJECT/g' $(grep -rl 'JuliaPackageSpitter.jl' .)
-sed -i 's/juliapackagespitter/my_project/g' $(grep -rl 'juliapackagespitter' .)
-sed -i 's/JuliaPackageSpitter.jl/my-project/g' $(grep -rl 'JuliaPackageSpitter.jl' .)
+sed -i 's/JuliaPackageSpitter/MyProject/g' $(grep -rl 'JuliaPackageSpitter' .)
+sed -i 's/JULIAPACKAGESPITTER/MYPROJECT/g' $(grep -rl 'JULIAPACKAGESPITTER' .)
+sed -i 's/juliapackagespitter/myproject/g' $(grep -rl 'juliapackagespitter' .)
 sed -i 's/github.com/github.com/g' $(grep -rl 'github.com' .)
 sed -i "s/2026/$(date +%Y)/g" $(grep -rl '2026' .)
 sed -i "s/2026-03-16/$(date +%Y-%m-%d)/g" $(grep -rl '2026-03-16' .)
@@ -68,23 +67,25 @@ docs/AI-CONVENTIONS.md
 [width="100%",cols="25%,25%,25%,25%",options="header",]
 |===
 |Placeholder |Description |Example |Files
-|`+JuliaPackageSpitter.jl+` |Human-readable project name
-|`+My Project+` |SECURITY.md, CODE_OF_CONDUCT.md, TOPOLOGY.md,
-STATE.a2ml, Justfile, GOVERNANCE.md, MAINTAINERS.md, flake.guix,
-devcontainer.json
+|`+JuliaPackageSpitter+` |Package name (Project.toml `name`, the
+`module` line, `using` statements) |`+MyProject+` |Project.toml, src/, test/,
+README.adoc
 
-|`+JuliaPackageSpitter.jl+` |One-line description |`+A tool for X+`
-|flake.guix
-
-|`+JuliaPackageSpitter.jl+` |Uppercase identifier (for Idris2
-modules, C macros) |`+MY_PROJECT+` |ABI-FFI-README.md, src/abi/_.idr,
-ffi/zig/_.zig
-
-|`+juliapackagespitter+` |Lowercase identifier (for C symbols,
-filenames) |`+my_project+` |ABI-FFI-README.md, ffi/zig/*.zig
-
-|`+JuliaPackageSpitter.jl+` |Repository name (slug) |`+my-project+`
+|`+JuliaPackageSpitter.jl+` |Repository name. Must equal the package name
+followed by `.jl` (the identity gate checks this) |`+MyProject.jl+`
 |CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, cliff.toml
+
+|`+My Project+` |Human-readable name in prose |`+My Project+` |SECURITY.md,
+CODE_OF_CONDUCT.md, TOPOLOGY.md, STATE.a2ml, Justfile, GOVERNANCE.md,
+MAINTAINERS.md, flake.guix, devcontainer.json
+
+|`+A one-line summary+` |One-line description |`+A tool for X+` |flake.guix
+
+|`+JULIAPACKAGESPITTER+` |Uppercase identifier (for C macros and
+environment variables) |`+MYPROJECT+` |ffi/zig/*.zig, ffi/zig/include/*.h
+
+|`+juliapackagespitter+` |Lowercase identifier (for C symbols and
+filenames) |`+myproject+` |ffi/zig/*.zig, ffi/zig/include/*.h
 
 |`+hyperpolymath+` |GitHub/GitLab org or username |`+my-org+` |SPDX
 headers, CONTRIBUTING.md, SECURITY.md, GOVERNANCE.md, MAINTAINERS.md,

@@ -24,4 +24,4 @@ This dev container uses `cgr.dev/chainguard/wolfi-base` with git, curl, bash, an
 
 == Customization
 
-Replace `JuliaPackageSpitter.jl` placeholders in both `devcontainer.json` and `Containerfile` with your actual project name. Run `just deps` to verify the environment after first launch.
+Replace the `{{PROJECT_NAME}}` placeholders in both `devcontainer.json` and `Containerfile` with your actual project name. The project's name is `JuliaPackageSpitter.jl` (see `docs/decisions/0002-reconcile-repository-and-package-name.adoc`); use that name, not the placeholder, when you fill them in. Run `just deps` to verify the environment after first launch.
