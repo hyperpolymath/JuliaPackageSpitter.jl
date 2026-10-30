@@ -42,7 +42,7 @@ jobs:
         run: |
           julia --project=docs -e '
             using JuliaFormatter
-            ok = format("."; verbose=true, overwrite=false)
+            ok = format("."; verbose=true, overwrite=false, throw_on_error=true)
             ok || error("JuliaFormatter: source is not formatted; run format(\".\") locally and commit the result")
           '
 
