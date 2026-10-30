@@ -25,6 +25,7 @@ permissions:
 
 jobs:
   security-audit:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -45,8 +46,12 @@ jobs:
             ok || error("JuliaFormatter: source is not formatted; run format(\".\") locally and commit the result")
           '
 
-      - name: Julia static analysis
-        run: julia --project=docs -e 'using JET; JET.test_package(path=".")'
+      # JET and Aqua run even when the format check fails, so one failing check does
+      # not hide the results of the others. The job still fails if any step failed.
+      - name: Julia static analysis (JET)
+        if: always()
+        run: julia --project=docs -e 'using JET, JuliaPackageSpitter; JET.test_package(JuliaPackageSpitter)'
 
       - name: Julia package audit (Aqua)
+        if: always()
         run: julia --project=docs -e 'using Aqua, JuliaPackageSpitter; Aqua.test_all(JuliaPackageSpitter)'

@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   test:
+    timeout-minutes: 30
     name: Julia ${{ matrix.julia-version }} - ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
