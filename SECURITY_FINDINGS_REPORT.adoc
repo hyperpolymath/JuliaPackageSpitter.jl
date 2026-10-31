@@ -1,11 +1,11 @@
 == Security Findings Report
 
 *Date:* 2024-04-14 *Analysis Method:* Manual Code Review (GitHub Actions
-execution unavailable) *Scope:* JuliaPackage-Reuse-Audit.jl package
+execution unavailable) *Scope:* JuliaPackageSpitter.jl package
 
 === Executive Summary
 
-Conducted manual security analysis of the JuliaPackage-Reuse-Audit.jl
+Conducted manual security analysis of the JuliaPackageSpitter.jl
 codebase since automated security audit workflows cannot execute due to
 GitHub Actions repository-level issues. Identified several security
 considerations and best practice recommendations.
@@ -311,7 +311,7 @@ sanitization
 
 *Security Status:* ✅ *GOOD WITH IMPROVEMENT OPPORTUNITIES*
 
-The JuliaPackage-Reuse-Audit.jl package demonstrates good security
+The JuliaPackageSpitter.jl package demonstrates good security
 practices overall, with proper licensing, documentation, and tool
 integration. The identified security findings are primarily related to
 input validation and error handling - common issues in generator/tools

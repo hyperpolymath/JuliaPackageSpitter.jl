@@ -5,7 +5,7 @@
 * [x] Basic directory tree generation.
 * [x] `Project.toml` and `README.md` templating.
 * [x] Standard `src/Package.jl` and `src/types.jl` wiring.
-* [x] `Standard` CI profile (GitHub Actions template).
+* [ ] `Standard` CI profile (GitHub Actions template). Not done: `ci_profile` is stored on the spec but `generate_package` does not read it.
 
 == v0.2.0 - Ecosystem Expansion
 * [ ] `Strict` CI profile (Audit-grade gates, marker checks).

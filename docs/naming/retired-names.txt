@@ -8,9 +8,30 @@
 # in retired-names-allowlist.txt (the historical record: the changelog, the ADR
 # that retired it, and this register).
 #
+# What this file holds. Every entry is a name PROVED impossible as a Julia
+# package identifier: proofs/agda/RetiredNames.agda (generated from this file by
+# scripts/gen-identity-agda.sh --mode retired) refutes each entry by showing that
+# it contains a character a Julia identifier may not contain ('-' or '.'). An
+# entry that is a legal identifier cannot be registered, and the generator
+# refuses it. That is the reason a spelling such as JULIAPACKAGE_REUSE_AUDIT
+# (underscores and upper case are legal identifier characters) is NOT listed
+# here: it could have been a package name, so the proof would be false.
+#
+# What tree hygiene covers. Hygiene is a different rule and it is wider. The
+# checker tests/check-identity.sh (section retired-names) takes each entry above
+# and matches it in EVERY spelling: hyphen, space, underscore, title case, upper
+# case, the ".jl" suffix dropped, the separators dropped, or a line break in the
+# middle of the name. So a legal-identifier rendering such as
+# JULIAPACKAGE_REUSE_AUDIT is still a finding in the tree, even though it is not
+# a register entry. The register says what is impossible; the checker says what
+# must not appear.
+#
 # Enforcement is mechanical, not editorial:
-#   * tests/check-identity.sh   greps the tree and fails on any hit outside the
+#   * tests/check-identity.sh   greps the tree (every spelling, across line
+#                               breaks) and fails on any hit outside the
 #                               allowlist;
+#   * tests/check-identity-fixtures.sh   proves the checker rejects each spelling
+#                               family in a deliberately broken tree;
 #   * proofs/agda/RetiredNames.agda (generated from this file by
 #     scripts/gen-identity-agda.sh --mode retired) proves that each name below
 #     could never have been a legal Julia package name, which is why it was
@@ -24,3 +45,4 @@
 JuliaPackage-Reuse-Audit.jl
 JuliaPackage-Reuse-Audit
 juliapackage-reuse-audit
+JuliaPackage_Reuse_Audit.jl

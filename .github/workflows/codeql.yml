@@ -23,6 +23,7 @@ permissions:
 
 jobs:
   analyze:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     permissions:
       contents: read

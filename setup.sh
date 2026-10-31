@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: MPL-2.0
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath)
 #
-# Juliapackage Reuse Audit.Jl — Universal Setup Script
+# JuliaPackageSpitter.jl — Universal Setup Script
 # Detects platform and shell, installs just, then hands off to Justfile.
 
 set -euo pipefail
 
 echo "═══════════════════════════════════════════════════"
-echo "  Juliapackage Reuse Audit.Jl — Setup"
+echo "  JuliaPackageSpitter.jl — Setup"
 echo "═══════════════════════════════════════════════════"
 echo ""
 

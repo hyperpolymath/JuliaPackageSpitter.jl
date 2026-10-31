@@ -14,6 +14,7 @@ permissions:
 
 jobs:
   contractile-check:
+    timeout-minutes: 30
     name: Contractile Checks
     runs-on: ubuntu-latest
 
@@ -21,10 +22,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4
 
-      - name: Install just
+      # Install the version pinned in .tool-versions from crates.io. cargo checks
+      # every crate against the lockfile checksums, and --locked stops it from
+      # resolving newer dependencies. The script is not piped into a shell.
+      - name: Install just (pinned to .tool-versions)
         run: |
-          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/local/bin
-          echo "$(just --version)"
+          cargo install just --version 1.36.0 --locked --root "$HOME/just-bin"
+          echo "$HOME/just-bin/bin" >> "$GITHUB_PATH"
+          "$HOME/just-bin/bin/just" --version
 
       - name: Run must checks
         run: just must-check

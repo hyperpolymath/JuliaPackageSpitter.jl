@@ -1,0 +1,7 @@
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+# Tooling environment for .github/workflows/security_audit.yml.
+# Deliberately empty: the workflow adds JuliaFormatter, JET and Aqua at run time,
+# and develops the package from this checkout. None of them is a dependency of
+# the package itself (see Project.toml).
+[deps]

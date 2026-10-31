@@ -2,7 +2,7 @@
 # Trustfile (A2ML Canonical)
 
 @abstract:
-Integrity and provenance verification for JuliaPackage-Reuse-Audit.jl.
+Integrity and provenance verification for JuliaPackageSpitter.jl.
 @end
 
 @requires:

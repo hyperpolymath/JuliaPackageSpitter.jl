@@ -1,0 +1,39 @@
+;; SPDX-License-Identifier: MPL-2.0
+;
+; Repo chora for JuliaPackageSpitter.jl. It replaces .machine_readable/CLADE.a2ml,
+; which is a retired format. Spec: metadatastician/standards
+; 2-protocols/chora/CHORA-SPEC.adoc (DRAFT, not yet ratified). Translated under
+; 1-formats/deed/mappings/clade-to-repo-deed.adoc.
+;
+; :repo-uuid is re-derived from the repository name (mapping P-1, profile C).
+; The legacy CLADE uuid is not carried into this deed.
+(repo-deed
+  :schema-version "1.0.0"
+  :canonical-name "JuliaPackageSpitter.jl"
+  :repo-uuid #u8"gv-clade-index:github.com/hyperpolymath/JuliaPackageSpitter.jl"
+  :beholding-chora #u5"estate/chora"
+  (identity :owner "hyperpolymath" :primary-forge github :prefixed-name "dx-JuliaPackageSpitter.jl")
+  (clade
+    :primary dx
+    :secondary ()
+    :assigned "2026-03-16"
+    :rationale "")
+  (forges
+    :github "hyperpolymath/JuliaPackageSpitter.jl"
+    :gitlab "hyperpolymath/JuliaPackageSpitter.jl"
+    :bitbucket "hyperpolymath/JuliaPackageSpitter.jl")
+  (lineage
+    :type standalone
+    :parent "Julia package — dependency reuse auditing"
+    :born "2026-03-16")
+  (status
+    :phase active
+    :since "2026-03-16"
+    :present #t
+    :aliases ()
+    :merged-into ""
+    :superseded-by ""
+    :successors ()
+    :ended ""
+    (history
+      (entry :phase active :since "2026-03-16" :note "backfilled default — correct if the true phase differs"))))

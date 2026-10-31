@@ -2,7 +2,7 @@
 # Dustfile (A2ML Canonical)
 
 @abstract:
-Recovery and rollback paths for JuliaPackage-Reuse-Audit.jl.
+Recovery and rollback paths for JuliaPackageSpitter.jl.
 Declares how to undo significant state changes.
 @end
 

@@ -1,6 +1,9 @@
 # SPDX-License-Identifier: MPL-2.0
 # SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-# This workflow is managed by gh actions-lock.
+# Action pins: every `uses:` is pinned to a full commit SHA, edited by hand. Each
+# SHA is also recorded in .github/workflows/actions.lock, and `gh actions-lock
+# --verify` checks that the two agree. The tool is a checker here, not the author
+# of the pins.
 #
 # proof-gates.yml — the package identity gate.
 #

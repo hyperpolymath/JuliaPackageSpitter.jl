@@ -1,1 +1,4 @@
+# Toolchain for this repository. asdf and mise both read this file.
+# Julia: 1.10 is the compat floor in Project.toml, and CI tests 1.10 and 1.11.
+julia 1.10.12
 just 1.36.0
