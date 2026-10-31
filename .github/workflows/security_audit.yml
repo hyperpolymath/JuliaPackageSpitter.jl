@@ -1,9 +1,23 @@
 # SPDX-License-Identifier: MPL-2.0
-# This workflow is managed by gh actions-lock.
+# Weekly Julia security audit.
+#
+# Every step is a test that can fail:
+#   * JuliaFormatter.format returns true only when every file already matches the
+#     formatter's style. With overwrite=false it does not throw on a mismatch, so
+#     the return value is tested here.
+#   * JET reports possible runtime errors in the package.
+#   * Aqua.test_all(JuliaPackageSpitter) runs the package-quality checks, including
+#     stale and incompatible dependencies. Aqua needs the package itself, so the
+#     tooling environment in docs/ develops the package from this checkout.
+#
+# docs/Project.toml is the tooling environment. Nothing in it is a dependency of
+# the package.
 name: Security Audit
 on:
   schedule:
     - cron: '0 0 * * 1'
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -11,6 +25,7 @@ permissions:
 
 jobs:
   security-audit:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -19,27 +34,24 @@ jobs:
       - uses: julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687 # v3.0.3
         with:
           version: '1.10'
-      
+
       - name: Install Julia security tools
-        run: julia --project=docs -e 'using Pkg; Pkg.add(["JuliaFormatter", "JET", "Aqua"])'
-      
-      - name: Julia format check
-        run: julia --project=docs -e 'using JuliaFormatter; JuliaFormatter.format("."; verbose=true, overwrite=false)'
-      
-      - name: Julia static analysis
-        run: julia --project=docs -e 'using JET; JET.test_package(path=".")'
-      
-      - name: Julia package audit
-        run: julia --project=docs -e 'using Aqua; Aqua.test_all(deps=true)'
-      
-      - name: Check for outdated dependencies
-        run: julia --project=. -e 'using Pkg; Pkg.status(); Pkg.update()'
-        continue-on-error: true
-      
-      - name: Security summary
+        run: julia --project=docs -e 'using Pkg; Pkg.add(["JuliaFormatter", "JET", "Aqua"]); Pkg.develop(PackageSpec(path="."))'
+
+      - name: Julia format check (fails when files are not formatted)
         run: |
-          echo "=== Security Audit Summary ==="
-          echo "Completed: $(date)"
-          echo "Tools: JuliaFormatter, JET, Aqua"
-          echo "Status: See individual job outputs"
-          echo "Next audit: Next Monday"
+          julia --project=docs -e '
+            using JuliaFormatter
+            ok = format("."; verbose=true, overwrite=false, throw_on_error=true)
+            ok || error("JuliaFormatter: source is not formatted; run format(\".\") locally and commit the result")
+          '
+
+      # JET and Aqua run even when the format check fails, so one failing check does
+      # not hide the results of the others. The job still fails if any step failed.
+      - name: Julia static analysis (JET)
+        if: always()
+        run: julia --project=docs -e 'using JET, JuliaPackageSpitter; JET.test_package(JuliaPackageSpitter)'
+
+      - name: Julia package audit (Aqua)
+        if: always()
+        run: julia --project=docs -e 'using Aqua, JuliaPackageSpitter; Aqua.test_all(JuliaPackageSpitter)'

@@ -25,3 +25,8 @@ proofs/agda/README.adoc
 # the retired repository so a reader knows what the fixture is a recording of;
 # the claim itself is built from RetiredNames.retiredName1, not retyped.
 tests/reject/MismatchedRepoName.agda
+# The agent-instruction methodology. Its staleness detector rejects STATE.a2ml
+# when it contains the upper-case spelling JULIAPACKAGE_REUSE_AUDIT, which is a
+# legal Julia identifier and therefore cannot be a register entry. The detector
+# is load-bearing: the file must keep naming the spelling it guards against.
+.machine_readable/agent_instructions/methodology.a2ml

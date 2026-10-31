@@ -3,12 +3,12 @@
 # Converted from STATE.scm on 2026-03-15
 
 [metadata]
-project = "JuliaPackage-Reuse-Audit.jl"
+project = "JuliaPackageSpitter.jl"
 version = "0.1.0"
 last-updated = "2026-03-15"
 status = "active"
 
 [project-context]
-name = "JuliaPackage-Reuse-Audit.jl"
+name = "JuliaPackageSpitter.jl"
 completion-percentage = 90
 phase = "beta"

@@ -1,7 +1,7 @@
-# ⚓ ANCHOR: JuliaPackage-Reuse-Audit.jl
-# This is the canonical authority for the JuliaPackage-Reuse-Audit.jl repository.
+# ⚓ ANCHOR: JuliaPackageSpitter.jl
+# This is the canonical authority for the JuliaPackageSpitter.jl repository.
 
-id: "org.hyperpolymath.JuliaPackage-Reuse-Audit.jl"
+id: "org.hyperpolymath.JuliaPackageSpitter.jl"
 version: "1.0.0"
 clade: "unknown"
 status: "active"

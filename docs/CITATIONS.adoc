@@ -1,34 +1,34 @@
-= JuliaPackage-Reuse-Audit.jl - Citation Guide
+= JuliaPackageSpitter.jl - Citation Guide
 :toc:
 
 == BibTeX
 
 [source,bibtex]
 ----
-@software{JuliaPackage-Reuse-Audit.jl_2026,
+@software{JuliaPackageSpitter.jl_2026,
   author = {Jewell, Jonathan D.A.},
-  title = {JuliaPackage-Reuse-Audit.jl},
+  title = {JuliaPackageSpitter.jl},
   year = {2026},
-  url = {https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl},
+  url = {https://github.com/hyperpolymath/JuliaPackageSpitter.jl},
   license = {MPL-2.0}
 }
 ----
 
 == Harvard Style
 
-Jewell, J.D.A. (2026) _JuliaPackage-Reuse-Audit.jl_ [Computer software]. Available at: https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl
+Jewell, J.D.A. (2026) _JuliaPackageSpitter.jl_ [Computer software]. Available at: https://github.com/hyperpolymath/JuliaPackageSpitter.jl
 
 == OSCOLA
 
-Jonathan D.A. Jewell, 'JuliaPackage-Reuse-Audit.jl' (2026) <https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl>
+Jonathan D.A. Jewell, 'JuliaPackageSpitter.jl' (2026) <https://github.com/hyperpolymath/JuliaPackageSpitter.jl>
 
 == MLA
 
-Jewell, Jonathan D.A. "JuliaPackage-Reuse-Audit.jl." 2026, github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl.
+Jewell, Jonathan D.A. "JuliaPackageSpitter.jl." 2026, github.com/hyperpolymath/JuliaPackageSpitter.jl.
 
 == APA 7
 
-Jewell, J.D.A. (2026). _JuliaPackage-Reuse-Audit.jl_ [Computer software]. GitHub. https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl
+Jewell, J.D.A. (2026). _JuliaPackageSpitter.jl_ [Computer software]. GitHub. https://github.com/hyperpolymath/JuliaPackageSpitter.jl
 
 == See Also
 

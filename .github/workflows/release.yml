@@ -17,6 +17,7 @@ permissions:
 
 jobs:
   build:
+    timeout-minutes: 30
     name: Build Artifacts
     runs-on: ubuntu-latest
     permissions:
@@ -41,6 +42,7 @@ jobs:
       #     path: target/release/
 
   changelog:
+    timeout-minutes: 30
     name: Generate Changelog
     runs-on: ubuntu-latest
     permissions:
@@ -86,6 +88,7 @@ jobs:
           retention-days: 5
 
   release:
+    timeout-minutes: 30
     name: Create GitHub Release
     needs: [build, changelog]
     runs-on: ubuntu-latest

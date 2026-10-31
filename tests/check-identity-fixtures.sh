@@ -40,6 +40,23 @@ cases=(
   "retired-name-reintroduced|retired-names|1|build_retired_name_reintroduced"
   "retired-register-missing|retired-names|1|build_retired_register_missing"
   "decided-identity-drift|decided-identity|1|build_decided_identity_drift"
+  # One rejected case per spelling family of the retired name (OldThing.jl here).
+  # Each family is a real way the tree carried a retired repository name (see the
+  # spelling notes in docs/naming/retired-names.txt). A rule nobody has seen fail
+  # is not trusted.
+  "spelling-hyphen-camel|retired-names|1|build_spelling_hyphen_camel"
+  "spelling-spaced-title|retired-names|1|build_spelling_spaced_title"
+  "spelling-lowercase-hyphen|retired-names|1|build_spelling_lowercase_hyphen"
+  "spelling-underscore|retired-names|1|build_spelling_underscore"
+  "spelling-upper-case|retired-names|1|build_spelling_upper_case"
+  "spelling-no-suffix|retired-names|1|build_spelling_no_suffix"
+  "spelling-no-separators|retired-names|1|build_spelling_no_separators"
+  "spelling-wrapped-line|retired-names|1|build_spelling_wrapped_line"
+  "spelling-split-inside-word|retired-names|1|build_spelling_split_inside_word"
+  "spelling-three-line-wrap|retired-names|1|build_spelling_three_line_wrap"
+  # A deliberately consistent tree that uses the words of the retired name in
+  # legitimate senses. Must be ACCEPTED, or the rule is too broad.
+  "legitimate-concept-mentions|retired-names|0|build_legitimate_mentions"
 )
 
 PKG="MyThing"
@@ -176,11 +193,52 @@ build_decided_identity_drift() {
   sed -i "0,/'T'/s//'X'/" "$1/proofs/agda/CanonicalIdentity.agda"
 }
 
+# Build a consistent tree, then plant one spelling of the retired name in a note.
+# printf %b turns the \n in the argument into a real line break, which is how the
+# wrapped-line family is produced.
+build_spelling() {
+  build_consistent "$1" || return 1
+  printf '%b\n' "$2" >"$1/docs/notes.adoc"
+}
+build_spelling_hyphen_camel()     { build_spelling "$1" 'Formerly Old-Thing.jl, now retired.'; }
+build_spelling_spaced_title()     { build_spelling "$1" 'Formerly Old Thing.Jl, now retired.'; }
+build_spelling_lowercase_hyphen() { build_spelling "$1" 'Formerly old-thing, now retired.'; }
+build_spelling_underscore()       { build_spelling "$1" 'Formerly Old_Thing.jl, now retired.'; }
+build_spelling_upper_case()       { build_spelling "$1" 'Formerly OLD_THING.JL, now retired.'; }
+build_spelling_no_suffix()        { build_spelling "$1" 'Formerly OldThing, now retired.'; }
+build_spelling_no_separators()    { build_spelling "$1" 'Formerly oldthingjl, now retired.'; }
+build_spelling_wrapped_line()     { build_spelling "$1" 'Formerly Old\nThing.jl, now retired.'; }
+build_spelling_split_inside_word() { build_spelling "$1" 'Formerly Ol\ndThing.jl, now retired.'; }
+# Three lines, and no adjacent pair matches the name on its own: only the scan
+# that joins lines with nothing can see it.
+build_spelling_three_line_wrap() { build_spelling "$1" 'Formerly Old\nThi\nng.jl, now retired.'; }
+
+# The consistent tree, but with the REAL register (every entry the repository
+# retired) and sentences that use the words of the retired name in legitimate
+# senses. The checker must accept it: it is the control for over-matching.
+build_legitimate_mentions() {
+  build_consistent "$1" || return 1
+  cp "docs/naming/retired-names.txt" "$1/docs/naming/retired-names.txt" || return 1
+  cat >"$1/docs/notes.adoc" <<'ADOC'
+= Notes
+
+The roadmap lists an Automated "Reuse Audit" feature that is not yet built.
+
+The package is classified as a Julia package — dependency reuse auditing
+is the field it belongs to.
+
+This repository used to be named after a "reuse audit" capability.
+A Julia package reuse auditing tool is a different project.
+ADOC
+}
+
 workdir="$(mktemp -d)"
 trap 'rm -rf "$workdir"' EXIT
 
 fail=0
 ran=0
+accepted=0
+rejected=0
 for entry in "${cases[@]}"; do
   IFS='|' read -r name sections expected builder <<<"$entry"
   dir="${workdir}/${name}"
@@ -202,8 +260,14 @@ for entry in "${cases[@]}"; do
   status=0
   output="$(bash tests/check-identity.sh "${args[@]}" 2>&1)" || status=$?
   ran=$((ran + 1))
-  if [ "$status" -eq "$expected" ] || { [ "$expected" -eq 1 ] && [ "$status" -ne 0 ]; }; then
+  # A rejection must be the checker REPORTING a failure, not a crash or a usage
+  # error that happens to exit non-zero: it must print at least one FAIL line.
+  reported=0
+  if printf '%s\n' "$output" | grep -q '^FAIL: '; then reported=1; fi
+  if { [ "$status" -eq "$expected" ] && [ "$expected" -eq 0 ]; } ||
+     { [ "$expected" -eq 1 ] && [ "$status" -ne 0 ] && [ "$reported" -eq 1 ]; }; then
     printf 'PASS: %-28s exited %d as expected (sections: %s)\n' "$name" "$status" "$sections"
+    if [ "$expected" -eq 0 ]; then accepted=$((accepted + 1)); else rejected=$((rejected + 1)); fi
     if [ "$expected" -ne 0 ]; then
       printf '%s\n' "$output" | grep -m1 '^FAIL:' | sed 's/^/        /'
     fi
@@ -223,4 +287,8 @@ if [ "$fail" -ne 0 ]; then
   printf 'FAIL: the identity checker did not behave as declared\n'
   exit 1
 fi
-printf 'PASS: the identity checker accepted the consistent tree and rejected all %d broken ones\n' "$((ran - 1))"
+if [ "$accepted" -lt 1 ] || [ "$rejected" -lt 1 ]; then
+  printf 'FAIL: the self-test needs at least one accepted control and one rejected case\n'
+  exit 1
+fi
+printf 'PASS: the identity checker accepted %d control tree(s) and rejected all %d broken ones\n' "$accepted" "$rejected"

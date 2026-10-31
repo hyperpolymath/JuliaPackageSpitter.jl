@@ -1,7 +1,7 @@
 # Clone the repository
 
-git clone https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl.git
-cd JuliaPackage-Reuse-Audit.jl
+git clone https://github.com/hyperpolymath/JuliaPackageSpitter.jl.git
+cd JuliaPackageSpitter.jl
 
 # Using Guix (recommended for reproducibility)
 
@@ -9,8 +9,8 @@ guix develop
 
 # Or using toolbox/distrobox
 
-toolbox create JuliaPackage-Reuse-Audit.jl-dev
-toolbox enter JuliaPackage-Reuse-Audit.jl-dev
+toolbox create JuliaPackageSpitter.jl-dev
+toolbox enter JuliaPackageSpitter.jl-dev
 # Install dependencies manually
 
 # Verify setup
@@ -21,7 +21,7 @@ just test    # Run test suite
 ### Repository Structure
 
 ```text
-JuliaPackage-Reuse-Audit.jl/
+JuliaPackageSpitter.jl/
 ├── src/ # Source code (Perimeter 1-2)
 ├── lib/ # Library code (Perimeter 1-2)
 ├── extensions/ # Extensions (Perimeter 2)
@@ -95,10 +95,10 @@ JuliaPackage-Reuse-Audit.jl/
 
     Look for issues labelled:
 
-    - [`good first issue`](https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/labels/good%20first%20issue) — Simple Perimeter 3 tasks
-    - [`help wanted`](https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/labels/help%20wanted) — Community help needed
-    - [`documentation`](https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/labels/documentation) — Docs improvements
-    - [`perimeter-3`](https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/labels/perimeter-3) — Community sandbox scope
+    - [`good first issue`](https://github.com/hyperpolymath/JuliaPackageSpitter.jl/labels/good%20first%20issue) — Simple Perimeter 3 tasks
+    - [`help wanted`](https://github.com/hyperpolymath/JuliaPackageSpitter.jl/labels/help%20wanted) — Community help needed
+    - [`documentation`](https://github.com/hyperpolymath/JuliaPackageSpitter.jl/labels/documentation) — Docs improvements
+    - [`perimeter-3`](https://github.com/hyperpolymath/JuliaPackageSpitter.jl/labels/perimeter-3) — Community sandbox scope
 
     ---
 

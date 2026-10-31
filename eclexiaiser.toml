@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MPL-2.0
-# eclexiaiser manifest for JuliaPackage-Reuse-Audit.jl
+# eclexiaiser manifest for JuliaPackageSpitter.jl
 
 [project]
-name = "JuliaPackage-Reuse-Audit.jl"
+name = "JuliaPackageSpitter.jl"
 
 [[functions]]
 name = "audit"

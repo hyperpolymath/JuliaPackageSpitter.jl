@@ -45,7 +45,7 @@ help recipe="":
 
 # Show this project's info
 info:
-    @echo "Project: juliapackage-reuse-audit"
+    @echo "Project: juliapackagespitter"
     @echo "Version: {{version}}"
     @echo "RSR Tier: {{tier}}"
     @echo "Recipes: $(just --summary | wc -w)"
@@ -240,7 +240,7 @@ init:
 
 # Build the project (debug mode)
 build *args:
-    @echo "Building juliapackage-reuse-audit (debug)..."
+    @echo "Building juliapackagespitter (debug)..."
     # TODO: Replace with your build command
     # Examples:
     #   cargo build {{args}}                    # Rust
@@ -251,7 +251,7 @@ build *args:
 
 # Build in release mode with optimizations
 build-release *args:
-    @echo "Building juliapackage-reuse-audit (release)..."
+    @echo "Building juliapackagespitter (release)..."
     # TODO: Replace with your release build command
     # Examples:
     #   cargo build --release {{args}}
@@ -375,7 +375,7 @@ run-verbose *args: build
 
 # Install to user path
 install: build-release
-    @echo "Installing juliapackage-reuse-audit..."
+    @echo "Installing juliapackagespitter..."
     # TODO: Replace with your install command
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -419,7 +419,7 @@ cookbook:
     #!/usr/bin/env bash
     mkdir -p docs
     OUTPUT="docs/just-cookbook.adoc"
-    echo "= juliapackage-reuse-audit Justfile Cookbook" > "$OUTPUT"
+    echo "= juliapackagespitter Justfile Cookbook" > "$OUTPUT"
     echo ":toc: left" >> "$OUTPUT"
     echo ":toclevels: 3" >> "$OUTPUT"
     echo "" >> "$OUTPUT"
@@ -445,10 +445,10 @@ cookbook:
 man:
     #!/usr/bin/env bash
     mkdir -p docs/man
-    cat > docs/man/juliapackage-reuse-audit.1 << EOF
-    .TH juliapackage-reuse-audit 1 "$(date +%Y-%m-%d)" "{{version}}" "juliapackage-reuse-audit Manual"
+    cat > docs/man/juliapackagespitter.1 << EOF
+    .TH juliapackagespitter 1 "$(date +%Y-%m-%d)" "{{version}}" "juliapackagespitter Manual"
     .SH NAME
-    juliapackage-reuse-audit \- RSR-compliant project
+    juliapackagespitter \- RSR-compliant project
     .SH SYNOPSIS
     .B just
     [recipe] [args...]
@@ -457,7 +457,7 @@ man:
     .SH AUTHOR
     $(git config user.name 2>/dev/null || echo "Author") <$(git config user.email 2>/dev/null || echo "email")>
     EOF
-    echo "Generated: docs/man/juliapackage-reuse-audit.1"
+    echo "Generated: docs/man/juliapackagespitter.1"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # CONTAINERS (Podman + Wolfi)
@@ -466,19 +466,19 @@ man:
 # Build container image
 container-build tag="latest":
     @if [ -f Containerfile ]; then \
-        podman build -t juliapackage-reuse-audit:{{tag}} -f Containerfile .; \
+        podman build -t juliapackagespitter:{{tag}} -f Containerfile .; \
     else \
         echo "No Containerfile found"; \
     fi
 
 # Run container
 container-run *args:
-    podman run --rm -it juliapackage-reuse-audit:latest {{args}}
+    podman run --rm -it juliapackagespitter:latest {{args}}
 
 # Push container image
 container-push registry="ghcr.io/hyperpolymath" tag="latest":
-    podman tag juliapackage-reuse-audit:{{tag}} {{registry}}/juliapackage-reuse-audit:{{tag}}
-    podman push {{registry}}/juliapackage-reuse-audit:{{tag}}
+    podman tag juliapackagespitter:{{tag}} {{registry}}/juliapackagespitter:{{tag}}
+    podman push {{registry}}/juliapackagespitter:{{tag}}
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # CI & AUTOMATION
@@ -578,7 +578,7 @@ guix-build:
     guix build -f guix.scm
 
 # Enter Guix development shell (fallback)
-guix-shell:
+guix-shell-fallback:
     @if [ -f "flake.guix" ]; then guix develop; else echo "No flake.guix"; fi
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -689,7 +689,7 @@ assail:
 doctor:
     #!/usr/bin/env bash
     echo "═══════════════════════════════════════════════════"
-    echo "  Juliapackage Reuse Audit.Jl Doctor — Toolchain Health Check"
+    echo "  JuliaPackageSpitter.jl Doctor — Toolchain Health Check"
     echo "═══════════════════════════════════════════════════"
     echo ""
     PASS=0; FAIL=0; WARN=0
@@ -708,7 +708,7 @@ doctor:
     check "git"               git       "2.40" 
     check "Zig"               zig       "0.13" 
     check "Julia"             julia     "1.10" 
-# Optional tools
+    # Optional tools
     if command -v panic-attack >/dev/null 2>&1; then
     echo "  [OK]   panic-attack — available"
     PASS=$((PASS + 1))
@@ -728,7 +728,7 @@ doctor:
 heal:
     #!/usr/bin/env bash
     echo "═══════════════════════════════════════════════════"
-    echo "  Juliapackage Reuse Audit.Jl Heal — Automatic Tool Installation"
+    echo "  JuliaPackageSpitter.jl Heal — Automatic Tool Installation"
     echo "═══════════════════════════════════════════════════"
     echo ""
     if ! command -v just >/dev/null 2>&1; then
@@ -742,7 +742,7 @@ heal:
 tour:
     #!/usr/bin/env bash
     echo "═══════════════════════════════════════════════════"
-    echo "  Juliapackage Reuse Audit.Jl — Guided Tour"
+    echo "  JuliaPackageSpitter.jl — Guided Tour"
     echo "═══════════════════════════════════════════════════"
     echo ""
     echo '// SPDX-License-Identifier: MPL-2.0'
@@ -771,7 +771,7 @@ tour:
 help-me:
     #!/usr/bin/env bash
     echo "═══════════════════════════════════════════════════"
-    echo "  Juliapackage Reuse Audit.Jl — Common Workflows"
+    echo "  JuliaPackageSpitter.jl — Common Workflows"
     echo "═══════════════════════════════════════════════════"
     echo ""
     echo "FIRST TIME SETUP:"

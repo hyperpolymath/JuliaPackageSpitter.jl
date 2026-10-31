@@ -3,7 +3,7 @@
 === Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in
-JuliaPackage Reuse Audit.Jl a harassment-free experience for everyone,
+JuliaPackageSpitter.jl a harassment-free experience for everyone,
 regardless of age, body size, visible or invisible disability,
 ethnicity, sex characteristics, gender identity and expression, level of
 experience, education, socio-economic status, nationality, personal
@@ -321,7 +321,7 @@ spaces.
 If you have questions about this Code of Conduct:
 
 * Open a
-https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/discussions[Discussion]
+https://github.com/hyperpolymath/JuliaPackageSpitter.jl/discussions[Discussion]
 (for general questions)
 * Email \{\{CONDUCT_EMAIL}} (for private questions)
 * Contact any maintainer directly

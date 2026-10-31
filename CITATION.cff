@@ -1,13 +1,13 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
-title: "JuliaPackage-Reuse-Audit.jl"
+title: "JuliaPackageSpitter.jl"
 abstract: "Julia package: JuliaPackageSpitter"
 authors:
   - family-names: "Jewell"
     given-names: "Jonathan D.A."
     orcid: "https://orcid.org/0000-0002-3078-6652"
-repository-code: "https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl"
+repository-code: "https://github.com/hyperpolymath/JuliaPackageSpitter.jl"
 keywords:
   - "hyperpolymath"
   - "just"

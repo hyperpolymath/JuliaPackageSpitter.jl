@@ -107,3 +107,8 @@ dist/
 # generated/ only, per .machine_readable/MUST.contractile, and is never
 # committed: the whole point is that it is transcribed from live state.
 /generated/agda/
+/docs/Manifest.toml
+
+# Zig build output (ffi/zig): cache and install prefix, never committed
+/ffi/zig/.zig-cache/
+/ffi/zig/zig-out/

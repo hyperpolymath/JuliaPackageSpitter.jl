@@ -1,4 +1,4 @@
-= Juliapackage Reuse Audit.Jl — Maintainer Quickstart
+= JuliaPackageSpitter.jl — Maintainer Quickstart
 :toc: preamble
 
 Packaging, deployment, and release management.
@@ -31,7 +31,7 @@ Key workflows:
 
 [source,bash]
 ----
-podman build -f Containerfile -t JuliaPackage-Reuse-Audit.jl:latest .
+podman build -f Containerfile -t JuliaPackageSpitter.jl:latest .
 ----
 
 == Mirrors

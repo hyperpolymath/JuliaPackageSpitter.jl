@@ -22,8 +22,8 @@ just init       # interactive placeholder replacement
 
 [source,bash]
 ----
-git clone https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl.git
-cd JuliaPackage-Reuse-Audit.jl
+git clone https://github.com/hyperpolymath/JuliaPackageSpitter.jl.git
+cd JuliaPackageSpitter.jl
 just deps
 ----
 
@@ -66,5 +66,5 @@ project requirements listed in the `+Justfile+` or
 `+.machine_readable/ECOSYSTEM.a2ml+`.
 
 Open a
-https://github.com/hyperpolymath/JuliaPackage-Reuse-Audit.jl/discussions[Discussion]
+https://github.com/hyperpolymath/JuliaPackageSpitter.jl/discussions[Discussion]
 if you get stuck.

@@ -1,4 +1,4 @@
-== TEST-NEEDS.md — JuliaPackage-Reuse-Audit.jl
+== TEST-NEEDS.md — JuliaPackageSpitter.jl
 
 === CRG Grade: C — ACHIEVED 2026-04-04
 

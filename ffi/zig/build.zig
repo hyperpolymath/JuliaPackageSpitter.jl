@@ -1,5 +1,8 @@
-// JULIAPACKAGE_REUSE_AUDIT FFI Build Configuration
+// JULIAPACKAGESPITTER FFI Build Configuration
 // SPDX-License-Identifier: MPL-2.0
+//
+// Targets Zig 0.14.x. Other versions fail to compile this file: the build API
+// changed between releases (see ffi/zig/README or the PR notes).
 
 const std = @import("std");
 
@@ -9,35 +12,33 @@ pub fn build(b: *std.Build) void {
 
     // Shared library (.so, .dylib, .dll)
     const lib = b.addSharedLibrary(.{
-        .name = "juliapackage-reuse-audit",
+        .name = "juliapackagespitter",
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
+        .version = .{ .major = 0, .minor = 1, .patch = 0 },
     });
-
-    // Set version
-    lib.version = .{ .major = 0, .minor = 1, .patch = 0 };
 
     // Static library (.a)
     const lib_static = b.addStaticLibrary(.{
-        .name = "juliapackage-reuse-audit",
+        .name = "juliapackagespitter",
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });
+
+    // The allocator is c_allocator, so every artifact links libc.
+    lib.linkLibC();
+    lib_static.linkLibC();
 
     // Install artifacts
     b.installArtifact(lib);
     b.installArtifact(lib_static);
 
-    // Generate header file for C compatibility
-    const header = b.addInstallHeader(
-        b.path("include/juliapackage-reuse-audit.h"),
-        "juliapackage-reuse-audit.h",
-    );
-    b.getInstallStep().dependOn(&header.step);
+    // Install the hand-written C header
+    b.installFile("include/juliapackagespitter.h", "include/juliapackagespitter.h");
 
-    // Unit tests
+    // Unit tests (src/main.zig)
     const lib_tests = b.addTest(.{
         .root_source_file = b.path("src/main.zig"),
         .target = target,
@@ -49,7 +50,7 @@ pub fn build(b: *std.Build) void {
     const test_step = b.step("test", "Run library tests");
     test_step.dependOn(&run_lib_tests.step);
 
-    // Integration tests
+    // Integration tests (test/integration_test.zig), linked against the library
     const integration_tests = b.addTest(.{
         .root_source_file = b.path("test/integration_test.zig"),
         .target = target,
@@ -57,38 +58,14 @@ pub fn build(b: *std.Build) void {
     });
 
     integration_tests.linkLibrary(lib);
+    lib_tests.linkLibC();
+    integration_tests.linkLibC();
 
     const run_integration_tests = b.addRunArtifact(integration_tests);
 
     const integration_test_step = b.step("test-integration", "Run integration tests");
     integration_test_step.dependOn(&run_integration_tests.step);
 
-    // Documentation
-    const docs = b.addTest(.{
-        .root_source_file = b.path("src/main.zig"),
-        .target = target,
-        .optimize = .Debug,
-    });
-
-    const docs_step = b.step("docs", "Generate documentation");
-    docs_step.dependOn(&b.addInstallDirectory(.{
-        .source_dir = docs.getEmittedDocs(),
-        .install_dir = .prefix,
-        .install_subdir = "docs",
-    }).step);
-
-    // Benchmark (if needed)
-    const bench = b.addExecutable(.{
-        .name = "juliapackage-reuse-audit-bench",
-        .root_source_file = b.path("bench/bench.zig"),
-        .target = target,
-        .optimize = .ReleaseFast,
-    });
-
-    bench.linkLibrary(lib);
-
-    const run_bench = b.addRunArtifact(bench);
-
-    const bench_step = b.step("bench", "Run benchmarks");
-    bench_step.dependOn(&run_bench.step);
+    // `zig build test` runs both suites
+    test_step.dependOn(&run_integration_tests.step);
 }
