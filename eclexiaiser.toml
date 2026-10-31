@@ -4,9 +4,16 @@
 [project]
 name = "JuliaPackageSpitter.jl"
 
+# Declared function: the package's real entry point. `generate_package` is
+# defined in src/generator.jl and re-exported from src/JuliaPackageSpitter.jl.
+# This previously declared name = "audit" with source = "src/main.rs": a Rust
+# path that has never existed in this Julia package, inherited from the
+# repository's retired "reuse audit" identity. The dogfood-gate eclexiaiser
+# validator only tested that `source` was a non-empty string, so the phantom
+# passed. It now tests that the path exists — see dogfood-gate.yml.
 [[functions]]
-name = "audit"
-source = "src/main.rs"
+name = "generate_package"
+source = "src/generator.jl"
 energy-budget-mj = 20.0
 
 [carbon]

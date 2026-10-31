@@ -22,6 +22,17 @@ Integrity and provenance verification for JuliaPackageSpitter.jl.
 - severity: critical
 
 ### container-images-pinned
+# Strengthened to match its own description, which has always said "base images"
+# plural. The previous command was `grep -q '@sha256:' Containerfile`: it passed
+# if ANY line anywhere in the file contained that string. A Containerfile with
+# one pinned build stage and an unpinned `:latest` runtime stage — the stage that
+# actually ships — satisfied it. That is a proxy standing in for the finding.
+#
+# The replacement walks every FROM line and fails if any one lacks a digest, and
+# it names each offender instead of exiting silently, so a failure is actionable
+# rather than a bare non-zero status. It still passes when there is no
+# Containerfile at all, because the predicate is about images this repository
+# builds, not about requiring a container.
 - description: Containerfile base images use pinned digests
-- command: test ! -f Containerfile || grep -q '@sha256:' Containerfile
+- command: test ! -f Containerfile || awk '/^[[:space:]]*FROM[[:space:]]/ && !/@sha256:/ { print "unpinned base image: " $0; bad = 1 } END { exit bad + 0 }' Containerfile
 - severity: warning

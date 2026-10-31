@@ -19,7 +19,30 @@
 # fails the gate: this ledger can only shrink as work is done, never quietly
 # grow.
 #
+# CURRENT STATE: EMPTY — no exemptions claimed.
+#
+# This ledger previously carried exactly one entry:
+#
+#     cicd_rules/banned_language_file:examples/SafeDOMExample.res
+#
+# That entry is now dead. `examples/` contains only `quickstart.jl`; there is no
+# `SafeDOMExample.res` anywhere in this checkout, and no file with a `.res`,
+# `.rs` or `.gleam` extension exists in the repository at all. The exemption was
+# inherited from the estate-wide inventory below and outlived the file it
+# exempted.
+#
+# A compliance ledger that claims an exemption for a file that does not exist is
+# not harmless bookkeeping: it states that this repository contains banned
+# material and has been granted permission to keep it. Leaving it in place would
+# also mask a real regression — a reader auditing the language-policy gate would
+# conclude the ReScript migration here was still in progress when it is complete.
+#
+# Per the rule above, this ledger can only shrink as work is done. It has now
+# shrunk to zero, which is its intended end state. The file is retained (rather
+# than deleted) because it is the sanctioned location the governance gate names
+# in its failure message: if a future change genuinely needs an exemption, it is
+# declared here, individually, by path, with a reason.
+#
 # Inventory taken 2026-08-06 across all 424 estate repositories.
-# Files covered: 1 rescript
+# Files covered: 0 (was: 1 rescript, since removed from this repository)
 
-cicd_rules/banned_language_file:examples/SafeDOMExample.res

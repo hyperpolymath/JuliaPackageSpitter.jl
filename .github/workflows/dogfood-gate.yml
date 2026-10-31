@@ -262,31 +262,96 @@ jobs:
 
           echo "has_manifest=true" >> "$GITHUB_OUTPUT"
 
-          # Validate TOML structure using Python 3.11+ tomllib
-          python3 -c "
-          import tomllib, sys
-          with open('eclexiaiser.toml', 'rb') as f:
-              data = tomllib.load(f)
-          project = data.get('project', {})
-          if not project.get('name', '').strip():
-              print('ERROR: project.name is required', file=sys.stderr)
-              sys.exit(1)
-          functions = data.get('functions', [])
-          if not functions:
-              print('ERROR: at least one [[functions]] entry is required', file=sys.stderr)
-              sys.exit(1)
-          for fn in functions:
-              if not fn.get('name', '').strip():
-                  print('ERROR: function name cannot be empty', file=sys.stderr)
-                  sys.exit(1)
-              if not fn.get('source', '').strip():
-                  print(f'ERROR: function {fn[\"name\"]} has no source path', file=sys.stderr)
-                  sys.exit(1)
-          print(f'Valid: {project[\"name\"]} ({len(functions)} function(s))')
-          " || {
-            echo "::error file=eclexiaiser.toml::Invalid eclexiaiser.toml — see step output for details"
-            exit 1
-          }
+          # Validate the manifest WITHOUT Python.
+          #
+          # Why this changed: the previous implementation shelled out to
+          # `python3 -c "import tomllib …"` in a repository whose own
+          # label-triage.yml states "Python is fully banned estate-wide" and
+          # "THE CLASSIFIER IS jq, NOT PYTHON". A compliance gate that violates
+          # the policy it exists to enforce is worse than no gate: it teaches
+          # readers that the ban is decorative. jq cannot parse TOML, so the
+          # manifest is validated with awk against exactly the subset of TOML
+          # that `eclexiaiser init` emits — one [project] table plus one or more
+          # [[functions]] array-of-tables entries. No interpreter, no
+          # dependencies beyond the awk already on ubuntu-latest.
+          #
+          # What this now checks that the Python version did not: that every
+          # declared `source` path EXISTS in the checkout. The old validator
+          # only tested that the string was non-empty, so a manifest could
+          # declare `source = "src/main.rs"` in a Julia package — pointing at a
+          # file that never existed, in a language the repo does not contain —
+          # and report "Valid". A budget attached to a phantom function is not
+          # a measurement.
+          PROJECT_NAME=$(awk -F'"' '
+            /^[[:space:]]*\[project\]/      { inproj = 1; next }
+            /^[[:space:]]*\[/               { inproj = 0 }
+            inproj && /^[[:space:]]*name[[:space:]]*=/ { print $2; exit }
+          ' eclexiaiser.toml)
+
+          FUNC_COUNT=$(grep -cE '^[[:space:]]*\[\[functions\]\]' eclexiaiser.toml || true)
+
+          # Inside a [[functions]] block only: strip up to the first quote and
+          # from the closing quote onward, leaving the bare value.
+          FUNC_NAMES=$(awk '
+            /^[[:space:]]*\[\[functions\]\]/ { infn = 1; next }
+            /^[[:space:]]*\[/                { infn = 0 }
+            infn && /^[[:space:]]*name[[:space:]]*=/   { gsub(/^[^"]*"|".*$/, ""); print }
+          ' eclexiaiser.toml)
+
+          SOURCES=$(awk '
+            /^[[:space:]]*\[\[functions\]\]/ { infn = 1; next }
+            /^[[:space:]]*\[/                { infn = 0 }
+            infn && /^[[:space:]]*source[[:space:]]*=/ { gsub(/^[^"]*"|".*$/, ""); print }
+          ' eclexiaiser.toml)
+
+          FAIL=0
+          # `|| true` on every grep -c: the runner executes this block under
+          # `bash -e`, and grep exits 1 when it counts zero matches. Without the
+          # guard a manifest with no [[functions]] entry would abort the step
+          # before any diagnostic was printed. The count is still captured —
+          # grep prints "0" before exiting non-zero.
+          NAME_COUNT=$(printf '%s\n' "$FUNC_NAMES" | grep -c . || true)
+          SOURCE_COUNT=$(printf '%s\n' "$SOURCES" | grep -c . || true)
+
+          if [ -z "$PROJECT_NAME" ]; then
+            echo "::error file=eclexiaiser.toml::project.name is required"
+            FAIL=1
+          fi
+          if [ "$FUNC_COUNT" -lt 1 ]; then
+            echo "::error file=eclexiaiser.toml::at least one [[functions]] entry is required"
+            FAIL=1
+          fi
+          if [ "$NAME_COUNT" -ne "$FUNC_COUNT" ]; then
+            echo "::error file=eclexiaiser.toml::every [[functions]] entry needs a non-empty name (found $NAME_COUNT name(s) for $FUNC_COUNT entry/entries)"
+            FAIL=1
+          fi
+          if [ "$SOURCE_COUNT" -ne "$FUNC_COUNT" ]; then
+            echo "::error file=eclexiaiser.toml::every [[functions]] entry needs a source path (found $SOURCE_COUNT source(s) for $FUNC_COUNT entry/entries)"
+            FAIL=1
+          fi
+
+          # Existence, not just presence: a declared source must be a real file.
+          # Unquoted $SOURCES word-splits on the newlines awk emitted. A path
+          # containing whitespace would split into fragments that each fail the
+          # -f test and get reported individually — fail-closed rather than
+          # silently accepted, which is the right behaviour for a budget claim.
+          MISSING=""
+          for SRC in $SOURCES; do
+            [ -f "$SRC" ] || MISSING="$MISSING $SRC"
+          done
+          if [ -n "$MISSING" ]; then
+            for SRC in $MISSING; do
+              echo "::error file=eclexiaiser.toml::declared function source '$SRC' does not exist in this checkout"
+            done
+            FAIL=1
+          fi
+
+          if [ "$FAIL" -eq 0 ]; then
+            echo "Valid: $PROJECT_NAME ($FUNC_COUNT function(s), all source paths present)"
+          else
+            echo "::error file=eclexiaiser.toml::Invalid eclexiaiser.toml — see the messages above"
+          fi
+          exit "$FAIL"
 
       - name: Write summary
         run: |
