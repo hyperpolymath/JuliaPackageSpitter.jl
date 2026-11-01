@@ -16,10 +16,9 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
+  actions: read
   contents: read
 
 jobs:
   governance:
-    permissions:
-      contents: read
     uses: metadatastician/standards/.github/workflows/governance-reusable.yml@22e060bb239875c1180f08ca9fd9cc361b9ebc41 # main
