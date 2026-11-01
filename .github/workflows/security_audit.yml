@@ -42,8 +42,24 @@ jobs:
         run: |
           julia --project=docs -e '
             using JuliaFormatter
-            ok = format("."; verbose=true, overwrite=false, throw_on_error=true)
-            ok || error("JuliaFormatter: source is not formatted; run format(\".\") locally and commit the result")
+            ok = try
+              format("."; verbose=true, overwrite=false, throw_on_error=true, ignore=[".git", ".git/*"])
+            catch err
+              msg = replace(sprint(showerror, err), "\n" => "%0A", "\r" => "")
+              println("::error title=JuliaFormatter::$(first(msg, 1500))")
+              rethrow()
+            end
+            if !ok
+              for (root, _, files) in walkdir(".")
+                startswith(root, "./.git") && continue
+                for f in files
+                  endswith(f, ".jl") || continue
+                  p = normpath(joinpath(root, f))
+                  format(p; overwrite=false) || println("::error file=$p::File is not formatted according to JuliaFormatter")
+                end
+              end
+              error("JuliaFormatter: source is not formatted; run format(\".\") locally and commit the result")
+            end
           '
 
       # JET and Aqua run even when the format check fails, so one failing check does

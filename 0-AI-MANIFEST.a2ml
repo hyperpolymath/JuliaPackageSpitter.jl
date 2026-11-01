@@ -14,7 +14,7 @@ This is the AI manifest for **JuliaPackageSpitter.jl** (`hyperpolymath/JuliaPack
 
 ### Machine-Readable Metadata: `.machine_readable/` and Repo Deed
 
-The repository identity deed lives at root (`dx-JuliaPackageSpitter.jl_chora.deed`), and the 6 typed A2ML state files MUST exist in `.machine_readable/6a2/` ONLY:
+The repository identity deed lives at root (`dx-JuliaPackageSpitter.jl_chora.deed`), and the 6 typed A2ML state files MUST exist in `.machine_readable/descriptiles/` ONLY:
 1. **STATE.a2ml** - Project state, progress, blockers
 2. **META.a2ml** - Architecture decisions, governance
 3. **ECOSYSTEM.a2ml** - Position in ecosystem, relationships
@@ -65,7 +65,7 @@ JuliaPackageSpitter.jl/
 │   └── check-identity-fixtures.sh       # Positive/negative fixture suite for check-identity.sh
 ├── contractiles/                        # Must/Trust/Dust/Intend contractile definitions
 └── .machine_readable/                   # Structured metadata, anchors, and K9 contracts
-    ├── 6a2/                             # STATE, META, ECOSYSTEM, AGENTIC, NEUROSYM, PLAYBOOK
+    ├── descriptiles/                    # STATE, META, ECOSYSTEM, AGENTIC, NEUROSYM, PLAYBOOK
     ├── anchors/ANCHOR.a2ml              # Repository anchor metadata
     ├── agent_instructions/              # Methodology, coverage, and debt directives
     ├── integrations/                    # Estate integration descriptors
@@ -75,23 +75,23 @@ JuliaPackageSpitter.jl/
 ## SESSION STARTUP CHECKLIST
 
 ✅ Read THIS file (`0-AI-MANIFEST.a2ml`) first
-✅ Understand canonical locations (`dx-JuliaPackageSpitter.jl_chora.deed`, `.machine_readable/6a2/`, `contractiles/`)
+✅ Understand canonical locations (`dx-JuliaPackageSpitter.jl_chora.deed`, `.machine_readable/descriptiles/`, `contractiles/`)
 ✅ Respect package identity & quickstart parity invariants (`bash tests/check-identity.sh`)
-✅ Read `.machine_readable/6a2/STATE.a2ml` for current status
-✅ Read `.machine_readable/6a2/AGENTIC.a2ml` for interaction patterns
+✅ Read `.machine_readable/descriptiles/STATE.a2ml` for current status
+✅ Read `.machine_readable/descriptiles/AGENTIC.a2ml` for interaction patterns
 
 ## LIFECYCLE HOOKS
 
 ### on-enter (Session Start)
 
 1. Read and acknowledge this manifest
-2. Read `.machine_readable/6a2/STATE.a2ml`
+2. Read `.machine_readable/descriptiles/STATE.a2ml`
 3. Check open issues and active gates before editing
 
 ### on-exit (Session End)
 
 1. Run `bash tests/check-identity.sh` and `bash tests/check-identity-fixtures.sh`
-2. Update `.machine_readable/6a2/STATE.a2ml` if project state changed
+2. Update `.machine_readable/descriptiles/STATE.a2ml` if project state changed
 3. Summarize verified outcomes
 
 ## ATTESTATION PROOF
