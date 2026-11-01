@@ -17,7 +17,17 @@ end
 
 """
     generate_package(spec, target_dir)
-Scaffolds a new Julia package repo using the RSR standard.
+
+Scaffold a Julia package in `target_dir` using the RSR standard. Create the
+directory structure and write `Project.toml` and the main source file. Write
+`README.adoc` and `SONNET-TASKS.md` when their templates are present. Existing
+generated files are overwritten. If `spec.ffi_enabled` is true, also create
+the `ffi/zig` and `src/abi` directories; `spec.ci_profile` does not affect
+the output.
+
+Print a progress message and return a completion message. Errors from reading or
+rendering templates, creating directories or writing files propagate to the
+caller; a failure may leave a partial scaffold.
 """
 function generate_package(spec::PackageSpec, target_dir::String)
     println("🛠️ Spitting out new package: $(spec.name)...")
