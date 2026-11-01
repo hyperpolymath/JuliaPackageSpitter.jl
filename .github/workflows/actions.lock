@@ -27,7 +27,8 @@ workflows:
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'hyperpolymath/deed-ecosystem@aa4b836bd969df2bc58128cb8e3d20bbc88d5e79'
         - 'hyperpolymath/k9-ecosystem@89f3c2702f4f650a92aa7411502f38da06abd562'
-    '.github/workflows/governance.yml': []
+    '.github/workflows/governance.yml':
+        - 'metadatastician/standards@22e060bb239875c1180f08ca9fd9cc361b9ebc41'
     '.github/workflows/hypatia-scan.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3'
@@ -38,7 +39,8 @@ workflows:
         - 'peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697'
     '.github/workflows/label-triage.yml': []
     '.github/workflows/labels.yml': []
-    '.github/workflows/mirror.yml': []
+    '.github/workflows/mirror.yml':
+        - 'metadatastician/standards@22e060bb239875c1180f08ca9fd9cc361b9ebc41'
     '.github/workflows/proof-gates.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
     '.github/workflows/push-email-notify.yml':
@@ -47,8 +49,10 @@ workflows:
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9'
         - 'softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64'
-    '.github/workflows/scorecard.yml': []
-    '.github/workflows/secret-scanner.yml': []
+    '.github/workflows/scorecard.yml':
+        - 'metadatastician/standards@22e060bb239875c1180f08ca9fd9cc361b9ebc41'
+    '.github/workflows/secret-scanner.yml':
+        - 'metadatastician/standards@22e060bb239875c1180f08ca9fd9cc361b9ebc41'
     '.github/workflows/security_audit.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'julia-actions/setup-julia@da908477b5db94c10ffce8cfea9f2b3b9d5db687'
@@ -95,11 +99,26 @@ dependencies:
         repo_id: 496012378
         uses:
             - 'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f'
+    'denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed':
+        ref: 'v2.0.5'
+        commit: 'sha1-22d081ff2d3a40755e97629de92e3bcbfa7cf2ed'
+        owner_id: 42048915
+        repo_id: 356423100
     'dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98':
         ref: 'v3.1.0'
         commit: 'sha1-25dd0e34f4fe68f24cc83900b1fe3fe149efef98'
         owner_id: 27347476
         repo_id: 371068214
+    'dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8':
+        ref: 'v1'
+        commit: 'sha1-683b588c487a69d01f6c6ddf40f036ff682cc2c8'
+        owner_id: 1940490
+        repo_id: 260749683
+    'editorconfig-checker/action-editorconfig-checker@51f63319f592f97930c73d9c46184d20bd206393':
+        ref: 'v3.0.0'
+        commit: 'sha1-51f63319f592f97930c73d9c46184d20bd206393'
+        owner_id: 26415196
+        repo_id: 297874902
     'erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124':
         ref: 'v1.24.1'
         commit: 'sha1-54075bcc5e249e4758d363f27d099f55d843f124'
@@ -108,6 +127,11 @@ dependencies:
     'github/codeql-action@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee':
         ref: 'v4.39.0'
         commit: 'sha1-6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee'
+        owner_id: 9919
+        repo_id: 259445878
+    'github/codeql-action@b96794f015dfd88f77b49b1c93e0fa7110f94c63':
+        ref: 'v4.38.0'
+        commit: 'sha1-b96794f015dfd88f77b49b1c93e0fa7110f94c63'
         owner_id: 9919
         repo_id: 259445878
     'haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d':
@@ -140,6 +164,33 @@ dependencies:
         commit: 'sha1-da908477b5db94c10ffce8cfea9f2b3b9d5db687'
         owner_id: 53965732
         repo_id: 202020219
+    'metadatastician/standards@22e060bb239875c1180f08ca9fd9cc361b9ebc41':
+        ref: '22e060bb239875c1180f08ca9fd9cc361b9ebc41'
+        commit: 'sha1-22e060bb239875c1180f08ca9fd9cc361b9ebc41'
+        owner_id: 297579217
+        repo_id: 1116521501
+        uses:
+            - 'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9'
+            - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
+            - 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9'
+            - 'denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed'
+            - 'dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8'
+            - 'editorconfig-checker/action-editorconfig-checker@51f63319f592f97930c73d9c46184d20bd206393'
+            - 'erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124'
+            - 'github/codeql-action@b96794f015dfd88f77b49b1c93e0fa7110f94c63'
+            - 'ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e'
+            - 'oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6'
+            - 'webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555'
+    'ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e':
+        ref: 'v2.5.0'
+        commit: 'sha1-fa7117db83c52d787ae5a89f350999701505d78e'
+        owner_id: 67707773
+        repo_id: 421101922
+    'oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6':
+        ref: 'v2.2.0'
+        commit: 'sha1-0c5077e51419868618aeaa5fe8019c62421857d6'
+        owner_id: 108928776
+        repo_id: 512644635
     'peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697':
         ref: 'v4.0.1'
         commit: 'sha1-28959ce8df70de7be546dd1250a005dd32156697'
@@ -150,3 +201,8 @@ dependencies:
         commit: 'sha1-efb35369e0ad2afab669f228072c1b0d510eae64'
         owner_id: 2242
         repo_id: 204253808
+    'webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555':
+        ref: 'v0.10.0'
+        commit: 'sha1-e83874834305fe9a4a2997156cb26c5de65a8555'
+        owner_id: 135788
+        repo_id: 208510314

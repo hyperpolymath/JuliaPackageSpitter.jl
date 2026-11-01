@@ -2,10 +2,9 @@
 # RFC 9116 - security.txt
 # https://securitytxt.org/
 
-Contact: mailto:{{SECURITY_EMAIL}}
-Expires: {{CURRENT_YEAR}}-12-31T23:59:59.000Z
-Encryption: {{PGP_KEY_URL}}
+Contact: mailto:6759885+hyperpolymath@users.noreply.github.com
+Contact: https://github.com/hyperpolymath/JuliaPackageSpitter.jl/security/advisories/new
+Expires: 2027-11-01T23:59:59.000Z
 Preferred-Languages: en
-Canonical: https://github.com/hyperpolymath/JuliaPackageSpitter.jl/.well-known/security.txt
-Policy: https://github.com/hyperpolymath/JuliaPackageSpitter.jl/blob/main/SECURITY.md
-Hiring: https://{{WEBSITE}}/careers
+Canonical: https://github.com/hyperpolymath/JuliaPackageSpitter.jl/blob/main/www/.well-known/security.txt
+Policy: https://github.com/hyperpolymath/JuliaPackageSpitter.jl/blob/main/SECURITY.adoc

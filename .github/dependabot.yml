@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: MPL-2.0
-# Dependabot configuration for RSR-compliant repositories
-# Covers common ecosystems - remove unused ones for your project
+# Dependabot configuration for JuliaPackageSpitter.jl
+# Only github-actions applies to this repository; Julia package dependencies
+# live in Project.toml and Guix channels in .guix-channel.
 
 version: 2
 updates:
-  # GitHub Actions - always include
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -13,36 +13,3 @@ updates:
       actions:
         patterns:
           - "*"
-
-  # Rust/Cargo
-  - package-ecosystem: "cargo"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
-
-  # Elixir/Mix
-  - package-ecosystem: "mix"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-
-  # Node.js/npm
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-
-  # Python/pip
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-
-  # Guix flakes
-  - package-ecosystem: "guix"
-    directory: "/"
-    schedule:
-      interval: "weekly"

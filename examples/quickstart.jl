@@ -14,7 +14,7 @@ spec = PackageSpec(
     "Core cooling logic for SMR reactors",
     ["Jonathan D.A. Jewell"],
     :standard,
-    false
+    false,
 )
 
 # Scaffold into a temporary directory, so this file runs anywhere and leaves

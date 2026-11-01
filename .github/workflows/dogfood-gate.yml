@@ -43,7 +43,7 @@ jobs:
         uses: hyperpolymath/deed-ecosystem/validate-action@aa4b836bd969df2bc58128cb8e3d20bbc88d5e79 # main
         with:
           path: '.'
-          strict: 'false'
+          strict: 'true'
 
       - name: Write summary
         run: |
@@ -59,7 +59,7 @@ jobs:
           else
             echo "## DEED Manifest Validation" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "Scanned **${A2ML_COUNT}** manifest file(s) (.deed, or legacy .a2ml). See step output for details." >> "$GITHUB_STEP_SUMMARY"
+            echo "Scanned **${MANIFEST_COUNT}** manifest file(s) (.deed, or legacy .a2ml). See step output for details." >> "$GITHUB_STEP_SUMMARY"
           fi
 
   # ---------------------------------------------------------------------------
@@ -92,7 +92,7 @@ jobs:
         uses: hyperpolymath/k9-ecosystem/validate-action@89f3c2702f4f650a92aa7411502f38da06abd562 # main
         with:
           path: '.'
-          strict: 'false'
+          strict: 'true'
 
       - name: Write summary
         run: |
@@ -439,7 +439,7 @@ jobs:
 
           | Tool/Format | Status | Notes |
           |-------------|--------|-------|
-          | DEED repo deed (`<reponame>_chora.deed`) | ${A2ML_STATUS} | Required for all RSR repos |
+          | DEED repo deed (\`<reponame>_chora.deed\`) | ${DEED_STATUS} | Required for all RSR repos |
           | K9 contracts | ${K9_STATUS} | Required for repos with config files |
           | .editorconfig | ${EC_STATUS} | Required for all repos |
           | Groove endpoint | ${GROOVE_STATUS} | Required for service repos |

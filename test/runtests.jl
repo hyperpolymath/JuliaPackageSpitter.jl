@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 using JuliaPackageSpitter
 using Test
 
@@ -9,7 +10,7 @@ using Test
         "A dummy package for testing",
         ["Author One"],
         :standard,
-        false
+        false,
     )
 
     result = generate_package(spec, tmp_dir)
@@ -46,7 +47,7 @@ using Test
             "Package with FFI support",
             ["Jonathan D.A. Jewell"],
             :standard,
-            true
+            true,
         )
 
         result = generate_package(spec_ffi, tmp_ffi)
@@ -73,7 +74,7 @@ using Test
             "Package without FFI",
             ["Author"],
             :standard,
-            false
+            false,
         )
 
         generate_package(spec_no_ffi, tmp_no_ffi)
@@ -94,7 +95,7 @@ using Test
             "Multi-author package",
             ["Alice Smith", "Bob Jones", "Carol White"],
             :standard,
-            false
+            false,
         )
 
         generate_package(spec_multi, tmp_multi)
@@ -112,7 +113,7 @@ using Test
             "Solo developer",
             ["Solo Dev"],
             :minimal,
-            false
+            false,
         )
 
         generate_package(spec_single, tmp_single)
@@ -127,7 +128,7 @@ using Test
             "Verifying generated source file",
             ["Test Author"],
             :standard,
-            false
+            false,
         )
 
         generate_package(spec_src, tmp_src)
@@ -148,7 +149,7 @@ using Test
             "Checking TOML fields",
             ["Dev"],
             :standard,
-            false
+            false,
         )
 
         generate_package(spec_toml, tmp_toml)
@@ -170,7 +171,7 @@ using Test
             "No authors listed",
             String[],
             :standard,
-            false
+            false,
         )
 
         # Should still generate without error
@@ -186,7 +187,7 @@ using Test
             "Handles <angles>, \"quotes\", & ampersands",
             ["Dev"],
             :standard,
-            false
+            false,
         )
 
         result = generate_package(spec_special, tmp_special)
@@ -204,7 +205,7 @@ using Test
             "First generation",
             ["Dev"],
             :standard,
-            false
+            false,
         )
 
         # Generate once

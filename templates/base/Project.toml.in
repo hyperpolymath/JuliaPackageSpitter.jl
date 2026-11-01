@@ -1,0 +1,10 @@
+name = "{{name}}"
+uuid = "{{uuid}}"
+authors = [{{#authors}}"{{.}}"{{/authors}}]
+version = "0.1.0"
+
+[deps]
+Dates = "ade2ca70-3891-5945-931b-dc5ea821e773"
+
+[compat]
+julia = "1.10"

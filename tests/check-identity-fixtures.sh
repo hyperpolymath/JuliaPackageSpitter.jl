@@ -70,7 +70,7 @@ build_consistent() {
 
   cat >"$d/Project.toml" <<TOML
 name = "$PKG"
-uuid = "00000000-0000-0000-0000-000000000000"
+uuid = "f75e8b34-855f-8be3-ac21-52fac565e660"
 version = "0.1.0"
 
 [deps]
