@@ -69,13 +69,8 @@ using Test
 
     @testset "FFI-Disabled Package Structure" begin
         tmp_no_ffi = mktempdir()
-        spec_no_ffi = PackageSpec(
-            "NoFFIPkg",
-            "Package without FFI",
-            ["Author"],
-            :standard,
-            false,
-        )
+        spec_no_ffi =
+            PackageSpec("NoFFIPkg", "Package without FFI", ["Author"], :standard, false)
 
         generate_package(spec_no_ffi, tmp_no_ffi)
 
@@ -108,13 +103,8 @@ using Test
 
     @testset "Single Author Package" begin
         tmp_single = mktempdir()
-        spec_single = PackageSpec(
-            "SingleAuthor",
-            "Solo developer",
-            ["Solo Dev"],
-            :minimal,
-            false,
-        )
+        spec_single =
+            PackageSpec("SingleAuthor", "Solo developer", ["Solo Dev"], :minimal, false)
 
         generate_package(spec_single, tmp_single)
         content = read(joinpath(tmp_single, "Project.toml"), String)
@@ -144,13 +134,8 @@ using Test
 
     @testset "Project.toml Required Fields" begin
         tmp_toml = mktempdir()
-        spec_toml = PackageSpec(
-            "TomlCheck",
-            "Checking TOML fields",
-            ["Dev"],
-            :standard,
-            false,
-        )
+        spec_toml =
+            PackageSpec("TomlCheck", "Checking TOML fields", ["Dev"], :standard, false)
 
         generate_package(spec_toml, tmp_toml)
         content = read(joinpath(tmp_toml, "Project.toml"), String)
@@ -166,13 +151,8 @@ using Test
 
     @testset "Edge Case - Empty Authors List" begin
         tmp_empty_auth = mktempdir()
-        spec_empty = PackageSpec(
-            "EmptyAuthors",
-            "No authors listed",
-            String[],
-            :standard,
-            false,
-        )
+        spec_empty =
+            PackageSpec("EmptyAuthors", "No authors listed", String[], :standard, false)
 
         # Should still generate without error
         result = generate_package(spec_empty, tmp_empty_auth)
@@ -200,13 +180,8 @@ using Test
 
     @testset "Idempotent Generation (Overwrite)" begin
         tmp_idem = mktempdir()
-        spec_idem = PackageSpec(
-            "IdempotentPkg",
-            "First generation",
-            ["Dev"],
-            :standard,
-            false,
-        )
+        spec_idem =
+            PackageSpec("IdempotentPkg", "First generation", ["Dev"], :standard, false)
 
         # Generate once
         generate_package(spec_idem, tmp_idem)

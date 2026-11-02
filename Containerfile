@@ -23,7 +23,7 @@ RUN apk add --no-cache ca-certificates curl git tar \
         aarch64) julia_arch="aarch64"; julia_tar_arch="aarch64"; julia_sha="${JULIA_SHA256_AARCH64}" ;; \
         *) echo "Unsupported architecture: ${arch}" >&2; exit 1 ;; \
     esac \
-    && curl -fsSL "https://julialang-s3.julialang.org/bin/linux/${julia_arch}/1.10/julia-${JULIA_VERSION}-linux-${julia_tar_arch}.tar.gz" -o /tmp/julia.tar.gz \
+    && curl --proto '=https' --tlsv1.2 -fsSL "https://julialang-s3.julialang.org/bin/linux/${julia_arch}/1.10/julia-${JULIA_VERSION}-linux-${julia_tar_arch}.tar.gz" -o /tmp/julia.tar.gz \
     && echo "${julia_sha}  /tmp/julia.tar.gz" | sha256sum -c - \
     && mkdir -p /opt/julia \
     && tar -xzf /tmp/julia.tar.gz -C /opt/julia --strip-components=1 \
