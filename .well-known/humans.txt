@@ -1,0 +1,14 @@
+# SPDX-License-Identifier: MPL-2.0
+# humanstxt.org
+
+/* TEAM */
+Maintainer: Jonathan D.A. Jewell (hyperpolymath)
+Contact: j.d.a.jewell@open.ac.uk
+From: United Kingdom
+
+/* SITE */
+Last update: 2026-11-01
+Standards: RSR (Rhodium Standard Repository)
+License: MPL-2.0
+Components: Julia 1.10+, Agda 2.6.4, Mustache.jl
+Tools: just, Podman, Guix

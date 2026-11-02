@@ -2,8 +2,8 @@
 # RFC 9116 - security.txt
 # https://securitytxt.org/
 
-Contact: mailto:6759885+hyperpolymath@users.noreply.github.com
 Contact: https://github.com/hyperpolymath/JuliaPackageSpitter.jl/security/advisories/new
+Contact: mailto:j.d.a.jewell@open.ac.uk
 Expires: 2027-11-01T23:59:59.000Z
 Preferred-Languages: en
 Canonical: https://github.com/hyperpolymath/JuliaPackageSpitter.jl/blob/main/www/.well-known/security.txt

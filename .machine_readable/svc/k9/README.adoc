@@ -8,10 +8,10 @@ This directory contains the K9 self-validating contracts (`application/vnd.k9+ni
 
 == Validation
 
-Validated in CI by `.github/workflows/dogfood-gate.yml` (`hyperpolymath/k9-ecosystem/validate-action` with `strict: 'true'`) and locally via:
+Validated in CI by `.github/workflows/dogfood-gate.yml` (`hyperpolymath/k9-ecosystem/validate-action` with `strict: 'true'`). To typecheck locally with plain `nickel`, strip the leading `K9!` magic header line first:
 
 [source,bash]
 ----
-nickel typecheck .machine_readable/svc/k9/project-metadata.k9.ncl
-nickel typecheck .machine_readable/svc/k9/ci-validation.k9.ncl
+tail -n +2 .machine_readable/svc/k9/project-metadata.k9.ncl | nickel typecheck
+tail -n +2 .machine_readable/svc/k9/ci-validation.k9.ncl | nickel typecheck
 ----

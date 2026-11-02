@@ -37,7 +37,7 @@ Policy enforcement contracts live in:
 
 ## CORE INVARIANTS
 
-1. **One package, one name (`JuliaPackageSpitter`)** - Enforced by Agda proof (`proofs/agda/Identity.agda`), `tests/check-identity.sh`, and `test/identity.jl`
+1. **One package, one name (`JuliaPackageSpitter`)** - Enforced by Agda proof (`proofs/agda/CanonicalIdentity.agda` via `proofs/agda/All.agda`), `tests/check-identity.sh`, and `test/identity.jl`
 2. **README quickstart parity** - The first `[source,julia]` block in `README.adoc` MUST stay byte-identical to `examples/quickstart.jl` (excluding leading header comments)
 3. **No state file duplication** - Root must NOT contain `STATE.a2ml`, `META.a2ml`, etc.
 4. **License consistency** - All source and config files carry `SPDX-License-Identifier: MPL-2.0`
@@ -56,7 +56,7 @@ JuliaPackageSpitter.jl/
 │   └── generator.jl                     # PackageSpec & generate_package
 ├── templates/base/                      # Project.toml.in, README.adoc.tpl, SONNET-TASKS.md.tpl
 ├── examples/quickstart.jl               # Runnable quickstart verified against README.adoc
-├── proofs/agda/Identity.agda            # Constructive package-identity proof
+├── proofs/agda/CanonicalIdentity.agda   # Constructive package-identity proof (imported by All.agda)
 ├── test/
 │   ├── runtests.jl                      # Unit & scaffolding test suite
 │   └── identity.jl                      # Julia-side identity & quickstart verification
@@ -96,12 +96,12 @@ JuliaPackageSpitter.jl/
 
 ## ATTESTATION PROOF
 
-proof = "proofs/agda/Identity.agda"
+proof = "proofs/agda/CanonicalIdentity.agda"
 verified = true
 
 After reading this file, demonstrate understanding by stating:
 
-**"I have read the AI manifest for JuliaPackageSpitter.jl. Machine-readable state lives in `.machine_readable/` and `dx-JuliaPackageSpitter.jl_chora.deed`, and package identity invariants are enforced by `proofs/agda/Identity.agda` and `tests/check-identity.sh`."**
+**"I have read the AI manifest for JuliaPackageSpitter.jl. Machine-readable state lives in `.machine_readable/descriptiles/` and `dx-JuliaPackageSpitter.jl_chora.deed`, and package identity invariants are enforced by `proofs/agda/CanonicalIdentity.agda` and `tests/check-identity.sh`."**
 
 ## META
 

@@ -51,11 +51,34 @@ jobs:
             end
             if !ok
               for (root, _, files) in walkdir(".")
-                startswith(root, "./.git") && continue
+                (root == "./.git" || startswith(root, "./.git/")) && continue
                 for f in files
                   endswith(f, ".jl") || continue
                   p = normpath(joinpath(root, f))
-                  format(p; overwrite=false) || println("::error file=$p::File is not formatted according to JuliaFormatter")
+                  if !format(p; overwrite=false)
+                    orig = read(p, String)
+                    tmp = joinpath(dirname(p), ".jf_expected_" * basename(p))
+                    fmt = try
+                      cp(p, tmp; force=true)
+                      format(tmp; overwrite=true)
+                      read(tmp, String)
+                    finally
+                      rm(tmp; force=true)
+                    end
+                    orig_lines = split(orig, "\n")
+                    fmt_lines = split(fmt, "\n")
+                    shown = 0
+                    for i in 1:max(length(orig_lines), length(fmt_lines))
+                      ol = i <= length(orig_lines) ? orig_lines[i] : "<EOF>"
+                      fl = i <= length(fmt_lines) ? fmt_lines[i] : "<EOF>"
+                      if ol != fl
+                        println("::error file=$p,line=$i::JuliaFormatter mismatch: got $(repr(ol)) expected $(repr(fl))")
+                        shown += 1
+                        shown >= 10 && break
+                      end
+                    end
+                    shown == 0 && println("::error file=$p::File differs in bytes ($(ncodeunits(orig)) vs $(ncodeunits(fmt)))")
+                  end
                 end
               end
               error("JuliaFormatter: source is not formatted; run format(\".\") locally and commit the result")
