@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MPL-2.0
 == Security Policy
 
 We take security seriously. We appreciate your efforts to responsibly
@@ -35,33 +36,20 @@ a Vulnerability]
 
 This method ensures:
 
-* End-to-end encryption of your report
+* HTTPS-encrypted submission and maintainer-only advisory access
 * Private discussion space for collaboration
 * Coordinated disclosure tooling
 * Automatic credit when the advisory is published
 
-==== Alternative: Encrypted Email
+==== Alternative: Direct Maintainer Email
 
-If you cannot use GitHub Security Advisories, you may email us directly:
+If you cannot use GitHub Security Advisories, you may contact the maintainer directly:
 
 [cols=",",]
 |===
-|*Email* |6759885+hyperpolymath@users.noreply.github.com
-|*PGP Key* |link:%7B%7BPGP_KEY_URL%7D%7D[Download Public Key]
-|*Fingerprint* |`+[PGP fingerprint not set]+`
+|*Email* |mailto:j.d.a.jewell@open.ac.uk[j.d.a.jewell@open.ac.uk]
+|*Encryption* |Standard email is not PGP-encrypted by default; prefer GitHub Security Advisories for sensitive details or email first to coordinate a secure channel
 |===
-
-[source,bash]
-----
-# Import our PGP key
-curl -sSL {{PGP_KEY_URL}} | gpg --import
-
-# Verify fingerprint
-gpg --fingerprint 6759885+hyperpolymath@users.noreply.github.com
-
-# Encrypt your report
-gpg --armor --encrypt --recipient 6759885+hyperpolymath@users.noreply.github.com report.txt
-----
 
 ____
 *⚠️ Important:* Do not report security vulnerabilities through public
@@ -407,11 +395,9 @@ When using JuliaPackageSpitter.jl, we recommend:
 
 === Additional Resources
 
-* link:%7B%7BPGP_KEY_URL%7D%7D[Our PGP Public Key]
 * https://github.com/hyperpolymath/JuliaPackageSpitter.jl/security/advisories[Security
 Advisories]
-* link:CHANGELOG.md[Changelog]
-* link:.github/CONTRIBUTING.md[Contributing Guidelines]
+* link:CHANGELOG.adoc[Changelog]
 * https://cve.mitre.org/[CVE Database]
 * https://www.first.org/cvss/calculator/3.1[CVSS Calculator]
 
@@ -424,13 +410,13 @@ Advisories]
 |Purpose |Contact
 |*Security issues*
 |https://github.com/hyperpolymath/JuliaPackageSpitter.jl/security/advisories/new[Report
-via GitHub] or 6759885+hyperpolymath@users.noreply.github.com
+via GitHub] or mailto:j.d.a.jewell@open.ac.uk[j.d.a.jewell@open.ac.uk]
 
 |*General questions*
 |https://github.com/hyperpolymath/JuliaPackageSpitter.jl/discussions[GitHub
 Discussions]
 
-|*Other enquiries* |See link:README.md[README] for contact information
+|*Other enquiries* |See link:README.adoc[README] for contact information
 |===
 
 '''''

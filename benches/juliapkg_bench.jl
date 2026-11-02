@@ -78,11 +78,11 @@ println("=" ^ 60)
 
 # --- PackageSpec construction ---
 println("\n[1] PackageSpec construction (no FFI)")
-b_spec = @benchmark make_spec_minimal() samples=1000 evals=10
+b_spec = @benchmark make_spec_minimal() samples = 1000 evals = 10
 display(b_spec)
 
 println("\n[2] PackageSpec construction (with FFI)")
-b_spec_ffi = @benchmark make_spec_ffi() samples=1000 evals=10
+b_spec_ffi = @benchmark make_spec_ffi() samples = 1000 evals = 10
 display(b_spec_ffi)
 
 # --- Directory planning (in-memory, no I/O) ---
@@ -90,20 +90,20 @@ spec_min = make_spec_minimal()
 spec_ffi = make_spec_ffi()
 
 println("\n[3] Directory list planning (minimal spec, no FFI)")
-b_dirs = @benchmark plan_directories($spec_min) samples=1000 evals=10
+b_dirs = @benchmark plan_directories($spec_min) samples = 1000 evals = 10
 display(b_dirs)
 
 println("\n[4] Directory list planning (with FFI)")
-b_dirs_ffi = @benchmark plan_directories($spec_ffi) samples=1000 evals=10
+b_dirs_ffi = @benchmark plan_directories($spec_ffi) samples = 1000 evals = 10
 display(b_dirs_ffi)
 
 # --- UUID generation (one per package) ---
 println("\n[5] UUID generation throughput")
-b_uuid = @benchmark uuid4() samples=2000 evals=10
+b_uuid = @benchmark uuid4() samples = 2000 evals = 10
 display(b_uuid)
 
 println("\n[6] UUID string conversion")
-b_uuid_str = @benchmark string(uuid4()) samples=2000 evals=10
+b_uuid_str = @benchmark string(uuid4()) samples = 2000 evals = 10
 display(b_uuid_str)
 
 # --- Vector push performance (mimics directory scaffold growth) ---
@@ -111,18 +111,36 @@ println("\n[7] Directory scaffold append (8 dirs baseline)")
 b_push = @benchmark begin
     dirs = Vector{String}(undef, 0)
     sizehint!(dirs, 9)
-    push!(dirs, "src", "test", "docs", "scripts", "contractiles",
-          ".github/workflows", ".machine_readable")
-end samples=2000 evals=10
+    push!(
+        dirs,
+        "src",
+        "test",
+        "docs",
+        "scripts",
+        "contractiles",
+        ".github/workflows",
+        ".machine_readable",
+    )
+end samples = 2000 evals = 10
 display(b_push)
 
 println("\n[8] Directory scaffold append (with FFI paths)")
 b_push_ffi = @benchmark begin
     dirs = Vector{String}(undef, 0)
     sizehint!(dirs, 9)
-    push!(dirs, "src", "test", "docs", "scripts", "contractiles",
-          ".github/workflows", ".machine_readable", "ffi/zig", "src/abi")
-end samples=2000 evals=10
+    push!(
+        dirs,
+        "src",
+        "test",
+        "docs",
+        "scripts",
+        "contractiles",
+        ".github/workflows",
+        ".machine_readable",
+        "ffi/zig",
+        "src/abi",
+    )
+end samples = 2000 evals = 10
 display(b_push_ffi)
 
 println("\n" * "=" ^ 60)

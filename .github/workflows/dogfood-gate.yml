@@ -32,22 +32,69 @@ jobs:
       - name: Check for manifest files (.a2ml/.deed)
         id: detect
         run: |
-          COUNT=$(find . -type f \( -name '*.a2ml' -o -name '*.deed' \) -not -path './.git/*' | wc -l)
+          A2ML_COUNT=$(find . -type f -name '*.a2ml' -not -path './.git/*' | wc -l)
+          DEED_COUNT=$(find . -type f -name '*.deed' -not -path './.git/*' | wc -l)
+          COUNT=$((A2ML_COUNT + DEED_COUNT))
+          echo "a2ml_count=$A2ML_COUNT" >> "$GITHUB_OUTPUT"
+          echo "deed_count=$DEED_COUNT" >> "$GITHUB_OUTPUT"
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
           if [ "$COUNT" -eq 0 ]; then
             echo "::warning::No .a2ml/.deed manifest files found. Every RSR repo should have a repo deed (<reponame>_chora.deed); legacy 0-AI-MANIFEST.a2ml accepted mid-migration — standards #837"
           fi
 
-      - name: Validate DEED manifests
-        if: steps.detect.outputs.count > 0
+      - name: Validate A2ML manifests
+        if: steps.detect.outputs.a2ml_count > 0
         uses: hyperpolymath/deed-ecosystem/validate-action@aa4b836bd969df2bc58128cb8e3d20bbc88d5e79 # main
         with:
           path: '.'
-          strict: 'false'
+          strict: 'true'
+
+      - name: Validate repo deeds (.deed)
+        if: steps.detect.outputs.deed_count > 0
+        run: |
+          FAIL=0
+          while IFS= read -r -d '' deed; do
+            REL="${deed#./}"
+            if ! head -n 10 "$deed" | grep -q 'SPDX-License-Identifier:'; then
+              echo "::error file=${REL}::Missing SPDX-License-Identifier header in first 10 lines"
+              FAIL=1
+            fi
+            for required in '(repo-deed' ':schema-version' ':canonical-name' ':repo-uuid' '(identity' '(clade' '(status'; do
+              if ! grep -Fq "$required" "$deed"; then
+                echo "::error file=${REL}::Missing required repo-deed form '${required}'"
+                FAIL=1
+              fi
+            done
+            # Verify balanced S-expression parentheses outside ';' comments and strings.
+            if ! awk '
+              BEGIN { depth = 0; in_str = 0 }
+              {
+                for (i = 1; i <= length($0); i++) {
+                  c = substr($0, i, 1)
+                  if (in_str) {
+                    if (c == "\\") { i++; continue }
+                    if (c == "\"") { in_str = 0 }
+                    continue
+                  }
+                  if (c == ";") break
+                  if (c == "\"") { in_str = 1; continue }
+                  if (c == "(") depth++
+                  else if (c == ")") { depth--; if (depth < 0) exit 1 }
+                }
+              }
+              END { if (in_str || depth != 0) exit 1 }
+            ' "$deed"; then
+              echo "::error file=${REL}::Unbalanced parentheses or unclosed string in .deed S-expression"
+              FAIL=1
+            fi
+          done < <(find . -type f -name '*.deed' -not -path './.git/*' -print0)
+          exit "$FAIL"
 
       - name: Write summary
         run: |
           MANIFEST_COUNT="${{ steps.detect.outputs.count }}"
+          A2ML_COUNT="${{ steps.detect.outputs.a2ml_count }}"
+          DEED_COUNT="${{ steps.detect.outputs.deed_count }}"
           if [ "$MANIFEST_COUNT" -eq 0 ]; then
             cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
           ## DEED Manifest Validation
@@ -59,7 +106,7 @@ jobs:
           else
             echo "## DEED Manifest Validation" >> "$GITHUB_STEP_SUMMARY"
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "Scanned **${A2ML_COUNT}** manifest file(s) (.deed, or legacy .a2ml). See step output for details." >> "$GITHUB_STEP_SUMMARY"
+            echo "Validated **${DEED_COUNT}** repo deed(s) (\`.deed\`) and **${A2ML_COUNT}** A2ML manifest(s) (\`.a2ml\`)." >> "$GITHUB_STEP_SUMMARY"
           fi
 
   # ---------------------------------------------------------------------------
@@ -92,7 +139,7 @@ jobs:
         uses: hyperpolymath/k9-ecosystem/validate-action@89f3c2702f4f650a92aa7411502f38da06abd562 # main
         with:
           path: '.'
-          strict: 'false'
+          strict: 'true'
 
       - name: Write summary
         run: |
@@ -102,7 +149,7 @@ jobs:
             cat <<'EOF' >> "$GITHUB_STEP_SUMMARY"
           ## K9 Contract Validation
 
-          :warning: **No .a2ml/.deed manifest files found.** Every RSR-compliant repo should have a repo deed (`<reponame>_chora.deed`) at its root.
+          :warning: **No K9 contract files found.**
 
           Generate contracts with: `k9iser generate .`
           EOF
@@ -439,7 +486,7 @@ jobs:
 
           | Tool/Format | Status | Notes |
           |-------------|--------|-------|
-          | DEED repo deed (`<reponame>_chora.deed`) | ${A2ML_STATUS} | Required for all RSR repos |
+          | DEED repo deed (\`<reponame>_chora.deed\`) | ${DEED_STATUS} | Required for all RSR repos |
           | K9 contracts | ${K9_STATUS} | Required for repos with config files |
           | .editorconfig | ${EC_STATUS} | Required for all repos |
           | Groove endpoint | ${GROOVE_STATUS} | Required for service repos |
