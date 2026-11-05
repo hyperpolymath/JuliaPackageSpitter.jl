@@ -1,5 +1,5 @@
 name = "JuliaPackageSpitter"
-uuid = "772df90b-d426-497b-8682-0a765d4f8c0b"
+uuid = "81dd1219-803c-8eeb-85ea-39cf86282952"
 authors = ["Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"]
 version = "0.1.0"
 license = "MPL-2.0"

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: MPL-2.0
 # JuliaPackageSpitter.jl - Editor Configuration
 # https://editorconfig.org
 
@@ -16,6 +17,9 @@ trim_trailing_whitespace = false
 
 [*.adoc]
 trim_trailing_whitespace = false
+
+[*.jl]
+indent_size = 4
 
 [*.rs]
 indent_size = 4

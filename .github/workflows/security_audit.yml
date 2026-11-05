@@ -42,15 +42,54 @@ jobs:
         run: |
           julia --project=docs -e '
             using JuliaFormatter
-            ok = format("."; verbose=true, overwrite=false, throw_on_error=true)
-            ok || error("JuliaFormatter: source is not formatted; run format(\".\") locally and commit the result")
+            ok = try
+              format("."; verbose=true, overwrite=false, throw_on_error=true, ignore=[".git", ".git/*"])
+            catch err
+              msg = replace(sprint(showerror, err), "\n" => "%0A", "\r" => "")
+              println("::error title=JuliaFormatter::$(first(msg, 1500))")
+              rethrow()
+            end
+            if !ok
+              for (root, _, files) in walkdir(".")
+                (root == "./.git" || startswith(root, "./.git/")) && continue
+                for f in files
+                  endswith(f, ".jl") || continue
+                  p = normpath(joinpath(root, f))
+                  if !format(p; overwrite=false)
+                    orig = read(p, String)
+                    tmp = joinpath(dirname(p), ".jf_expected_" * basename(p))
+                    fmt = try
+                      cp(p, tmp; force=true)
+                      format(tmp; overwrite=true)
+                      read(tmp, String)
+                    finally
+                      rm(tmp; force=true)
+                    end
+                    orig_lines = split(orig, "\n")
+                    fmt_lines = split(fmt, "\n")
+                    shown = 0
+                    for i in 1:max(length(orig_lines), length(fmt_lines))
+                      ol = i <= length(orig_lines) ? orig_lines[i] : "<EOF>"
+                      fl = i <= length(fmt_lines) ? fmt_lines[i] : "<EOF>"
+                      if ol != fl
+                        println("::error file=$p,line=$i::JuliaFormatter mismatch: got $(repr(ol)) expected $(repr(fl))")
+                        shown += 1
+                        shown >= 10 && break
+                      end
+                    end
+                    shown == 0 && println("::error file=$p::File differs in bytes ($(ncodeunits(orig)) vs $(ncodeunits(fmt)))")
+                  end
+                end
+              end
+              error("JuliaFormatter: source is not formatted; run format(\".\") locally and commit the result")
+            end
           '
 
       # JET and Aqua run even when the format check fails, so one failing check does
       # not hide the results of the others. The job still fails if any step failed.
       - name: Julia static analysis (JET)
         if: always()
-        run: julia --project=docs -e 'using JET, JuliaPackageSpitter; JET.test_package(JuliaPackageSpitter)'
+        run: julia --project=docs -e 'using JET, JuliaPackageSpitter; JET.test_package(JuliaPackageSpitter; target_defined_modules=true)'
 
       - name: Julia package audit (Aqua)
         if: always()

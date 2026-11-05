@@ -1,9 +1,10 @@
+# SPDX-License-Identifier: MPL-2.0
 # ⚓ ANCHOR: JuliaPackageSpitter.jl
 # This is the canonical authority for the JuliaPackageSpitter.jl repository.
 
 id: "org.hyperpolymath.JuliaPackageSpitter.jl"
 version: "1.0.0"
-clade: "unknown"
+clade: "dx"
 status: "active"
 
 # SSG Configuration (Unified boj-server build)

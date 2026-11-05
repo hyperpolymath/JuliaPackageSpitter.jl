@@ -1,19 +1,20 @@
+# SPDX-License-Identifier: MPL-2.0
 # ⚠️ STOP - CRITICAL READING REQUIRED
 
 **THIS FILE MUST BE READ FIRST BY ALL AI AGENTS**
 
 ## WHAT IS THIS?
 
-This is the AI manifest for **[YOUR-REPO-NAME]**. It declares:
+This is the AI manifest for **JuliaPackageSpitter.jl** (`hyperpolymath/JuliaPackageSpitter.jl`). It declares:
 - Canonical file locations (where things MUST be, and nowhere else)
 - Critical invariants (rules that must NEVER be violated)
 - Repository structure and organization
 
 ## CANONICAL LOCATIONS (UNIVERSAL RULE)
 
-### Machine-Readable Metadata: `.machine_readable/` ONLY
+### Machine-Readable Metadata: `.machine_readable/` and Repo Deed
 
-These 6 a2ml files MUST exist in `.machine_readable/` directory ONLY:
+The repository identity deed lives at root (`dx-JuliaPackageSpitter.jl_chora.deed`), and the 6 typed A2ML state files MUST exist in `.machine_readable/descriptiles/` ONLY:
 1. **STATE.a2ml** - Project state, progress, blockers
 2. **META.a2ml** - Architecture decisions, governance
 3. **ECOSYSTEM.a2ml** - Position in ecosystem, relationships
@@ -21,106 +22,91 @@ These 6 a2ml files MUST exist in `.machine_readable/` directory ONLY:
 5. **NEUROSYM.a2ml** - Neurosymbolic integration config
 6. **PLAYBOOK.a2ml** - Operational runbook
 
-**CRITICAL:** If ANY of these files exist in the root directory, this is an ERROR.
+**CRITICAL:** None of `STATE.a2ml`, `META.a2ml`, `ECOSYSTEM.a2ml`, `AGENTIC.a2ml`, `NEUROSYM.a2ml`, or `PLAYBOOK.a2ml` may exist in the root directory.
 
-### Bot Directives: `.machine_readable/bot_directives/` ONLY
+### Contractiles & Service Contracts
 
-Bot-specific instructions for your automated agents. Example roles:
-- git-ops-bot - Git operations
-- quality-bot - Code quality
-- deps-bot - Dependency updates
-- docs-bot - Documentation
-- integration-bot - Integration
-- completion-bot - Task completion
-
-### Contractiles: `.machine_readable/contractiles/` ONLY
-
-Policy enforcement contracts:
-- k9 - Operational constraints (Nickel)
-- dust - Rollback and recovery semantics
-- lust - Future intent and roadmap direction
-- must - Required invariants and validations
-- trust - Cryptographic verification (Haskell)
+Policy enforcement contracts live in:
+- `contractiles/` (`must`, `trust`, `dust`, `intend`) + generated `contractile.just`
+- `.machine_readable/svc/k9/` - K9 Kennel/Yard contracts (`project-metadata.k9.ncl`, `ci-validation.k9.ncl`)
 
 ### Agent Instructions
 
-- `.claude/CLAUDE.md` - Claude-specific patterns (if exists)
 - `0-AI-MANIFEST.a2ml` - THIS FILE (universal entry point)
+- `.machine_readable/agent_instructions/` - Coverage, debt, and methodology rules
 
 ## CORE INVARIANTS
 
-1. **No state file duplication** - Root must NOT contain STATE.a2ml, META.a2ml, etc.
-2. **Single source of truth** - `.machine_readable/` is authoritative
-3. **No stale metadata** - If root state files exist, they are OUT OF DATE
-4. **License consistency** - All code MPL-2.0 unless platform requires MPL-2.0
-5. **Author attribution** - Always "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"
+1. **One package, one name (`JuliaPackageSpitter`)** - Enforced by Agda proof (`proofs/agda/CanonicalIdentity.agda` via `proofs/agda/All.agda`), `tests/check-identity.sh`, and `test/identity.jl`
+2. **README quickstart parity** - The first `[source,julia]` block in `README.adoc` MUST stay byte-identical to `examples/quickstart.jl` (excluding leading header comments)
+3. **No state file duplication** - Root must NOT contain `STATE.a2ml`, `META.a2ml`, etc.
+4. **License consistency** - All source and config files carry `SPDX-License-Identifier: MPL-2.0`
+5. **Author attribution** - Always `"Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"`
 
 ## REPOSITORY STRUCTURE
 
-<!-- CUSTOMIZE THIS SECTION FOR YOUR REPO -->
-
-This repo contains:
-
 ```
-[YOUR-REPO-NAME]/
-├── 0-AI-MANIFEST.a2ml         # THIS FILE (start here)
-├── README.md                   # Project overview
-├── [your source files]         # Main code
-└── .machine_readable/          # ALL machine-readable content
-    ├── STATE.a2ml              # Project state, progress, blockers
-    ├── META.a2ml               # Architecture decisions, governance
-    ├── ECOSYSTEM.a2ml          # Ecosystem position, relationships
-    ├── AGENTIC.a2ml            # AI agent interaction patterns
-    ├── NEUROSYM.a2ml           # Neurosymbolic integration config
-    ├── PLAYBOOK.a2ml           # Operational runbook
-    ├── bot_directives/         # Per-bot rules and constraints
-    └── contractiles/           # Policy enforcement contracts (k9, dust, lust, must, trust)
+JuliaPackageSpitter.jl/
+├── 0-AI-MANIFEST.a2ml                   # THIS FILE (start here)
+├── dx-JuliaPackageSpitter.jl_chora.deed # Repository identity chora deed
+├── Project.toml                         # Julia package manifest (UUIDv8 ADR-008)
+├── README.adoc                          # Overview and verified quickstart
+├── src/
+│   ├── JuliaPackageSpitter.jl           # Top-level module
+│   └── generator.jl                     # PackageSpec & generate_package
+├── templates/base/                      # Project.toml.in, README.adoc.tpl, SONNET-TASKS.md.tpl
+├── examples/quickstart.jl               # Runnable quickstart verified against README.adoc
+├── proofs/agda/CanonicalIdentity.agda   # Constructive package-identity proof (imported by All.agda)
+├── test/
+│   ├── runtests.jl                      # Unit & scaffolding test suite
+│   └── identity.jl                      # Julia-side identity & quickstart verification
+├── tests/
+│   ├── check-identity.sh                # Agda + shell package-identity gate
+│   └── check-identity-fixtures.sh       # Positive/negative fixture suite for check-identity.sh
+├── contractiles/                        # Must/Trust/Dust/Intend contractile definitions
+└── .machine_readable/                   # Structured metadata, anchors, and K9 contracts
+    ├── descriptiles/                    # STATE, META, ECOSYSTEM, AGENTIC, NEUROSYM, PLAYBOOK
+    ├── anchors/ANCHOR.a2ml              # Repository anchor metadata
+    ├── agent_instructions/              # Methodology, coverage, and debt directives
+    ├── integrations/                    # Estate integration descriptors
+    └── svc/k9/                          # K9 Kennel & Yard contracts
 ```
 
 ## SESSION STARTUP CHECKLIST
 
-✅ Read THIS file (0-AI-MANIFEST.a2ml) first
-✅ Understand canonical location: `.machine_readable/` (state, bots, contractiles)
-✅ Know the invariants (no state file duplication, etc.)
-✅ Check for MCP enforcement (if applicable)
-✅ Read `.machine_readable/6a2/STATE.a2ml` for current status
-✅ Read `.machine_readable/6a2/AGENTIC.a2ml` for interaction patterns
+✅ Read THIS file (`0-AI-MANIFEST.a2ml`) first
+✅ Understand canonical locations (`dx-JuliaPackageSpitter.jl_chora.deed`, `.machine_readable/descriptiles/`, `contractiles/`)
+✅ Respect package identity & quickstart parity invariants (`bash tests/check-identity.sh`)
+✅ Read `.machine_readable/descriptiles/STATE.a2ml` for current status
+✅ Read `.machine_readable/descriptiles/AGENTIC.a2ml` for interaction patterns
 
 ## LIFECYCLE HOOKS
 
 ### on-enter (Session Start)
 
-When starting a new session:
-
 1. Read and acknowledge this manifest
-2. Log session start (optional but recommended)
-   - Format: `[YYYY-MM-DD HH:MM:SS] Session started: [agent-name]`
-   - Location: `.machine_readable/session-log.txt`
-3. Read `.machine_readable/6a2/STATE.a2ml`
-4. Check for blockers
-5. State understanding of canonical locations
+2. Read `.machine_readable/descriptiles/STATE.a2ml`
+3. Check open issues and active gates before editing
 
 ### on-exit (Session End)
 
-When ending a session:
-
-1. Update `.machine_readable/6a2/STATE.a2ml` if changes made
-2. Log session end (optional but recommended)
-   - Format: `[YYYY-MM-DD HH:MM:SS] Session ended: [summary]`
-   - Location: `.machine_readable/session-log.txt`
-3. Document new blockers
-4. Summarize outcomes
+1. Run `bash tests/check-identity.sh` and `bash tests/check-identity-fixtures.sh`
+2. Update `.machine_readable/descriptiles/STATE.a2ml` if project state changed
+3. Summarize verified outcomes
 
 ## ATTESTATION PROOF
 
+proof = "proofs/agda/CanonicalIdentity.agda"
+verified = true
+
 After reading this file, demonstrate understanding by stating:
 
-**"I have read the AI manifest. All machine-readable content (state files, bot directives, contractiles) is located in `.machine_readable/` ONLY, and I will not create duplicate files in the root directory."**
+**"I have read the AI manifest for JuliaPackageSpitter.jl. Machine-readable state lives in `.machine_readable/descriptiles/` and `dx-JuliaPackageSpitter.jl_chora.deed`, and package identity invariants are enforced by `proofs/agda/CanonicalIdentity.agda` and `tests/check-identity.sh`."**
 
 ## META
 
 - **Format Version:** 1.0.0
-- **Created:** [DATE]
-- **Maintained By:** [YOUR-NAME/ORG]
+- **Created:** 2026-03-16
+- **Maintained By:** Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 - **License:** MPL-2.0
 - **Protocol:** https://github.com/hyperpolymath/0-ai-gatekeeper-protocol
